@@ -16,6 +16,7 @@ import Button from '@mui/material/Button';
 import Image from 'next/image';
 import Apple from '@mui/icons-material/Apple';
 import Link from 'next/link';
+import Close from '@mui/icons-material/Close';
 
 interface Props {
   /**
@@ -26,7 +27,15 @@ interface Props {
 }
 
 const drawerWidth = 240;
-const navItems = ['Home', 'Features', 'About', 'Contact', 'Login', 'Create Account'];
+const navItems = [
+  { title: 'Home', link: '/' },
+  { title: 'Features', link: '/features' },
+  { title: 'About', link: '/about' },
+  { title: 'Contact', link: '/contact' },
+  { title: 'Login', link: '/login' },
+  { title: 'Create Account', link: '/signup' },
+];
+
 
 export default function Navbar(props: Props) {
   const { window } = props;
@@ -42,11 +51,11 @@ export default function Navbar(props: Props) {
         BUZZCHAT
       </Typography>
       <Divider />
-      <List className='border border-e-red-400'>
+      <List className=''>
         {navItems.map((item) => (
-          <ListItem key={item} className='mx-20' disablePadding>
+          <ListItem key={item.title} disablePadding>
             <ListItemButton sx={{ textAlign: 'center' }}>
-              <ListItemText primary={item} />
+              <Link href={item.link}>{item.title}</Link>
             </ListItemButton>
           </ListItem>
         ))}
@@ -109,13 +118,32 @@ export default function Navbar(props: Props) {
       <Button className='text-white font-bold text-3xl items-center' startIcon={
         <Image src={'/logo-t.png'} alt='Logo' height={100} width={100} />
       }>BUZZCHAT</Button>
-      <div className='flex w-2/3 justify-evenly'>
+      <div className='hidden md:flex w-2/3 justify-evenly'>
         <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/'}>Home</Link>
         <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/'}>About</Link>
         <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/'}>Features</Link>
         <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/'}>Log in</Link>
         <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/'}>Create Account</Link>
       </div>
+      <IconButton className='text-white md:hidden' onClick={handleDrawerToggle}>
+        <MenuIcon fontSize='large' />
+        {/* <Close fontSize='large'/> */}
+      </IconButton>
+      <Drawer
+        container={container}
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile.
+        }}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+        }}
+      >
+        {drawer}
+      </Drawer>
     </nav>
   );
 }

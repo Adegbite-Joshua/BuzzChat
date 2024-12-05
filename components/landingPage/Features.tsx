@@ -10,7 +10,7 @@ import Lock from '@mui/icons-material/Lock'
 
 export default function Features() {
   return (
-    <section className='text-center my-5'>
+    <section className='text-center mt-[400px] my-5'>
         <Button className='text-blue-600 bg-slate-100 font-semibold px-4 py-3 hover:bg-blue-600 hover:text-white duration-300 ease-in-out rounded-full '>Featured</Button>
         <p className="text-2xl my-4">Reasons why you should choose <span className='text-3xl text-blue-600'>Buzzchat.</span></p>
         <p className='text-slate-400 mx-auto md:w-2/4 font-semibold'>Buzzchat has several that make the reason why you choose Buzzchat.</p>
