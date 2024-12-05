@@ -1,22 +1,16 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Image from 'next/image';
-import Apple from '@mui/icons-material/Apple';
 import Link from 'next/link';
-import Close from '@mui/icons-material/Close';
 
 interface Props {
   /**
@@ -120,10 +114,10 @@ export default function Navbar(props: Props) {
       }>BUZZCHAT</Button>
       <div className='hidden md:flex w-2/3 justify-evenly'>
         <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/'}>Home</Link>
-        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/'}>About</Link>
-        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/'}>Features</Link>
-        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/'}>Log in</Link>
-        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/'}>Create Account</Link>
+        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/about'}>About</Link>
+        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/features'}>Features</Link>
+        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/login'}>Log in</Link>
+        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/signup'}>Create Account</Link>
       </div>
       <IconButton className='text-white md:hidden' onClick={handleDrawerToggle}>
         <MenuIcon fontSize='large' />

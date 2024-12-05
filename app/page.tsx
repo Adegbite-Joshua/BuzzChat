@@ -12,7 +12,7 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <Features />
-      <div className="my-5 grid grid-cols-2 p-36 gap-5 items-center">
+      <div className="my-5 grid-cols-1 grid md:grid-cols-2 p-5 md:p-36 gap-5 items-center">
         <div>
           <p className="text-4xl font-bold">Communicate more efficiently using <span className="text-blue-600">Buzzchat</span></p>
           <p className="text-slate-400 font-semibold">Send messages easily using our mobile or desktop application and with a myriad of features that can make your experience different from other applications</p>
@@ -35,7 +35,7 @@ export default function Home() {
           <img src="/hero-section.png" alt="" className="h-full w-auto" />
         </div>
       </div>
-      <div className="my-5 grid grid-cols-2 p-36 gap-5 items-center">
+      <div className="my-5 grid-cols-1 grid md:grid-cols-2 p-5 md:p-36 gap-5 items-center">
         <div className="overflow-hidden">
           <img src="/hero-section.png" alt="" className="h-full w-auto" />
         </div>
@@ -47,8 +47,8 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className="p-20 h-[400px] overflow-hidden">
-        <img src="/hero-section.png" alt="" className="w-full h-auto" />
+      <div className="md:p-20 h-[400px] overflow-hidden">
+        <img src="/hero-section.png" alt="" className="w-full h-full" />
       </div>
       <Footer/>
     </main>
