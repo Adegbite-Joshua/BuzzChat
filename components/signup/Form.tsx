@@ -14,6 +14,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import Link from 'next/link';
 
 const Form = () => {
   const formik = useFormik({
@@ -62,7 +63,7 @@ const Form = () => {
       address: Yup.string().required('Address is required'),
       gender: Yup.string().required('Gender is required'),
     }),
-    onSubmit: (values: any) => {
+    onSubmit: (values) => {
       console.log(values);
       toast.success('Sign up successful');
     },
@@ -257,6 +258,15 @@ const Form = () => {
             >
               Sign Up
             </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="body2" align="center">
+              Already have an account?{' '}
+              <Link className='text-blue-500 hover:underline' href="/login">
+                Sign In
+              </Link>
+            </Typography>
+
           </Grid>
         </Grid>
       </form>
