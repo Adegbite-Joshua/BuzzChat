@@ -2,7 +2,9 @@
 
 
 import MessagedUser from '@/components/messages/MessagedUser'
-import { CallOutlined, ChatRounded, EditOutlined, FmdGoodOutlined, GroupsOutlined, SearchOutlined, SettingsOutlined } from '@mui/icons-material'
+import ReceiverMessage from '@/components/messages/ReceiverMessage'
+import SenderMessage from '@/components/messages/SenderMessage'
+import { CallOutlined, ChatRounded, EditOutlined, FmdGoodOutlined, GroupsOutlined, MoreHorizOutlined, SearchOutlined, SettingsOutlined, VideocamOutlined } from '@mui/icons-material'
 import EmailOutlined from '@mui/icons-material/EmailOutlined'
 import { Button } from '@mui/material'
 import Image from 'next/image'
@@ -11,8 +13,8 @@ import React from 'react'
 
 export default function page() {
     return (
-        <main className='flex flex-grow-0 flex-shrink-0 w-screen h-screen'>
-            <nav className='basis-2/12 border-r border-slate-200 p-3'>
+        <main className='flex flex-grow-0 flex-shrink-0 w-screen h-screen overflow-hidden'>
+            <nav className='md:basis-2/12 border-r border-slate-200 p-3'>
                 <div className='h-24'>
                     <Button className='text-blue-600 font-bold text-xl items-center' startIcon={
                         <Image src={'/logo-t.png'} alt='Logo' height={100} width={100} />
@@ -27,8 +29,8 @@ export default function page() {
                 <Link href={'/'} className={`flex items-center justify-start gap-3 p-2 my-2 ${false ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><EmailOutlined fontSize='medium' /> <span>Messages</span></Link>
                 <Link href={'/'} className={`flex items-center justify-start gap-3 p-2 my-2 ${true ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><EmailOutlined fontSize='medium' /> <span>Messages</span></Link>
             </nav>
-            <div className='basis-10/12 flex'>
-                <div className="basis-2/6 border-r border-slate-200">
+            <div className='basis-full md:basis-10/12 flex'>
+                <div className="basis-full md:basis-2/6 border-r border-slate-200">
                     <div className='h-1/6 p-3 flex items-center justify-between'>
                         <p className="text-xl text-blue-600">Messages</p>
                         <div>
@@ -37,7 +39,7 @@ export default function page() {
                         </div>
                     </div>
                     <hr />
-                    <div className='h-5/6 p-3 overflow-auto scrollbar-hidden'>
+                    <div className='md:h-5/6 p-3 overflow-auto scrollbar-hidden'>
                         <div>
                             <div className='text-slate-400 flex text-sm gap-3 p-2'>
                                 <FmdGoodOutlined fontSize='small' />
@@ -67,16 +69,32 @@ export default function page() {
                             <div className='flex justify-center items-center'>
                                 <img src={`/logo.png`} alt={`Another friend`} className='h-12 w-12 aspect-square rounded-full' />
                             </div>
-                                <div className=''>
-                                    <p className="font-bold">Chinedu Oyenre</p>
-                                    <p className="text-green-400 text-sm">Typing...</p>
-                                </div>
+                            <div className=''>
+                                <p className="font-bold">Chinedu Oyenre</p>
+                                <p className="text-green-400 text-sm">Typing...</p>
                             </div>
-                        <div className="flex"></div>
+                        </div>
+                        <div className="flex text-slate-400 gap-3 items-center">
+                            <VideocamOutlined className='cursor-pointer' fontSize='large' />
+                            <CallOutlined className='cursor-pointer' fontSize='large' />
+                            <div className='h-10 w-10 flex justify-center items-center border rounded-full'>
+                                <MoreHorizOutlined className='cursor-pointer' fontSize='large' />
+                            </div>
+                        </div>
                     </div>
                     <hr />
-                    <div className='h-5/6 p-3'>
-
+                    <div className='h-5/6 p-3 relative overflow-y-auto overflow-x-hidden scrollbar-hidden'>
+                        <div className='absolute flex w-full'>
+                            <span className='p-1 text-xs bg-white text-black rounded-md mx-auto'>Today, Dec 30</span>
+                        </div>
+                        <ReceiverMessage/>
+                        <ReceiverMessage/>
+                        <ReceiverMessage/>
+                        <SenderMessage/>
+                        <ReceiverMessage/>
+                        <SenderMessage/>
+                        <SenderMessage/>
+                        <SenderMessage/>
                     </div>
                 </div>
             </div>
