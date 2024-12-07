@@ -1,13 +1,12 @@
 "use client"
 
-
+import AuthenticatedLayout from '@/components/AuthenticatedLayout'
 import AttachmentPopover from '@/components/messages/AttachmentPopover'
 import MessagedUser from '@/components/messages/MessagedUser'
 import ReceiverMessage from '@/components/messages/ReceiverMessage'
 import SenderMessage from '@/components/messages/SenderMessage'
 import BottomNavbar from '@/components/navbar/BottomNavbar'
-import { AttachFileOutlined, CallOutlined, ChatRounded, EditOutlined, FmdGoodOutlined, GroupsOutlined, MicOutlined, MoreHorizOutlined, SearchOutlined, SendOutlined, SettingsOutlined, VideocamOutlined } from '@mui/icons-material'
-import EmailOutlined from '@mui/icons-material/EmailOutlined'
+import { AttachFileOutlined, CallOutlined, ChatRounded, EditOutlined, FmdGoodOutlined, MicOutlined, MoreHorizOutlined, SearchOutlined, SendOutlined, VideocamOutlined } from '@mui/icons-material'
 import { Button, IconButton, TextField } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -16,7 +15,6 @@ import React, { useEffect, useRef, useState } from 'react'
 
 
 export default function page() {
-    const activePath = usePathname();
     const searchParams = useSearchParams();
     const [showMessages, setShowMessages] = useState(false);
     const [isMediumSize, setIsMediumSize] = useState(false);
@@ -62,22 +60,7 @@ export default function page() {
     }, []);
 
     return (
-        <main className='flex flex-grow-0 flex-shrink-0 w-screen h-screen overflow-hidden'>
-            <nav className='hidden md:block md:basis-2/12 border-r border-slate-200 p-3'>
-                <div className='h-24'>
-                    <Button className='text-blue-600 font-bold text-xl items-center' startIcon={
-                        <Image src={'/logo-t.png'} alt='Logo' height={100} width={100} />
-                    }>BUZZCHAT</Button>
-                </div>
-                <hr />
-                <Link href={'/messages'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '/messages' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><EmailOutlined fontSize='medium' /> <span>Messages</span></Link>
-                <Link href={'/groups'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '/groups' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><GroupsOutlined fontSize='medium' /> <span>Groups</span></Link>
-                <Link href={'/settings'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><SettingsOutlined fontSize='medium' /> <span>Settings</span></Link>
-                <Link href={'/calls'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><CallOutlined fontSize='medium' /> <span>Call</span></Link>
-                <Link href={'/'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><EmailOutlined fontSize='medium' /> <span>Messages</span></Link>
-                <Link href={'/'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><EmailOutlined fontSize='medium' /> <span>Messages</span></Link>
-                <Link href={'/'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><EmailOutlined fontSize='medium' /> <span>Messages</span></Link>
-            </nav>
+        <AuthenticatedLayout>
             <div className='basis-full md:basis-10/12 flex'>
                 <div className="basis-full md:basis-2/6 border-r border-slate-200">
                     <div className='h-[10%] md:h-1/6 p-3 flex items-center justify-between'>
@@ -212,6 +195,6 @@ export default function page() {
                     </div>
                 </div>
             </div>
-        </main>
+        </AuthenticatedLayout>
     )
 }
