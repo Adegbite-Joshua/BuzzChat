@@ -10,7 +10,7 @@ import { AttachFileOutlined, CallOutlined, ChatRounded, EditOutlined, FmdGoodOut
 import { Button, IconButton, TextField } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 
 
