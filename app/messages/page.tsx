@@ -12,7 +12,7 @@ import { Button, IconButton, TextField } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 
 export default function page() {
@@ -22,7 +22,7 @@ export default function page() {
     const [isMediumSize, setIsMediumSize] = useState(false);
 
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    
+
     const handleAttachmentClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -32,7 +32,7 @@ export default function page() {
     };
 
     const handleSelectAttachment = (type: string) => {
-        
+
     };
 
     useEffect(() => {
@@ -52,6 +52,15 @@ export default function page() {
             window.removeEventListener('resize', handleResize);
         };
     }, [searchParams]);
+
+    const lastMessageRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (lastMessageRef.current) {
+            lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, []);
+
     return (
         <main className='flex flex-grow-0 flex-shrink-0 w-screen h-screen overflow-hidden'>
             <nav className='hidden md:block md:basis-2/12 border-r border-slate-200 p-3'>
@@ -72,7 +81,12 @@ export default function page() {
             <div className='basis-full md:basis-10/12 flex'>
                 <div className="basis-full md:basis-2/6 border-r border-slate-200">
                     <div className='h-[10%] md:h-1/6 p-3 flex items-center justify-between'>
-                        <p className="text-xl text-blue-600">Messages</p>
+                        <div>
+                            <Button className='md:hidden text-blue-600 font-bold text-sm items-center' startIcon={
+                                <Image src={'/logo-t.png'} alt='Logo' height={40} width={40} />
+                            }>BUZZCHAT</Button>
+                            <p className="text-sm md:text-xl text-blue-600">Messages</p>
+                        </div>
                         <div>
                             <IconButton>
                                 <EditOutlined className='text-slate-400 mx-2' />
@@ -111,7 +125,7 @@ export default function page() {
                             </div>
                         </div>
                     </div>
-                    <BottomNavbar/>
+                    <BottomNavbar />
                 </div>
                 <div className={`${showMessages && isMediumSize ? 'block absolute top-0 left-0 z-10 w-full h-full' : 'hidden'} md:block md:basis-4/6 bg-slate-200`}>
                     <div className='h-1/6 p-3 bg-white flex items-center justify-between'>
@@ -156,6 +170,7 @@ export default function page() {
                                 <SenderMessage />
                                 <SenderMessage />
                                 <SenderMessage />
+                                <span ref={lastMessageRef} className="h-0"></span>
                             </div>
                         </div>
 
