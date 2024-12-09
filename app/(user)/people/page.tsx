@@ -8,7 +8,6 @@ import { Button, IconButton } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { useRouter } from 'next/router'
 import React, { Suspense, useEffect, useState } from 'react'
 
 export default function Page() {
