@@ -1,12 +1,8 @@
-"use client"
-
+import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import OnVideoCall from "@/components/calls/OnVideoCall";
-import OnVoiceCall from "@/components/calls/OnVoiceCall";
-import CallNotification from "@/components/calls/CallNotification";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -18,8 +14,11 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
   weight: "100 900",
 });
- 
-// export default function Page({ params, searchParams }: Props) {}
+
+export const metadata: Metadata = {
+  title: "Buzz Chat",
+  description: "Chatting Application",
+};
 
 export default function RootLayout({
   children,
@@ -44,9 +43,6 @@ export default function RootLayout({
           pauseOnHover
           theme="light"
         />
-        {/* <OnVideoCall /> */}
-        <OnVoiceCall/>
-        {/* <CallNotification/> */}
       </body>
     </html>
   );

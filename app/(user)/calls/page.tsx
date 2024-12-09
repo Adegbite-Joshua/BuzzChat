@@ -1,16 +1,15 @@
 "use client"
 
-import AuthenticatedLayout from '@/components/AuthenticatedLayout'
 import RecentCall from '@/components/calls/RecentCall'
 import BottomNavbar from '@/components/navbar/BottomNavbar'
-import { CallOutlined, DeleteOutline, EditOutlined, EmailOutlined, RecentActors, SearchOutlined, VideocamOutlined } from '@mui/icons-material'
+import { CallOutlined, DeleteOutline, EditOutlined, EmailOutlined, MoreHorizOutlined, RecentActors, SearchOutlined, VideocamOutlined } from '@mui/icons-material'
 import { Button, IconButton } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
-export default function page() {
+export default function Page() {
   const [showCalls, setShowCalls] = useState(false);
   const [isMediumSize, setIsMediumSize] = useState(false);
   const searchParams = useSearchParams();
@@ -35,7 +34,6 @@ export default function page() {
     };
   }, [searchParams]);
   return (
-    <AuthenticatedLayout>
       <div className='basis-full md:basis-10/12 flex'>
         <div className="basis-full md:basis-2/6 border-r border-slate-200">
           <div className='h-[10%] md:h-1/6 p-3 flex items-center justify-between'>
@@ -59,7 +57,7 @@ export default function page() {
             <div>
               <div className='text-slate-400 flex text-sm gap-3 p-2'>
                 <RecentActors fontSize='small' />
-                <span>Pinned Message</span>
+                <span>Recent calls</span>
               </div>
               <div>
                 <RecentCall />
@@ -107,10 +105,9 @@ export default function page() {
           </div>
           <hr />
           <div className="h-5/6 p-3 relative">
-              
+
           </div>
         </div>
       </div>
-    </AuthenticatedLayout>
   )
 }
