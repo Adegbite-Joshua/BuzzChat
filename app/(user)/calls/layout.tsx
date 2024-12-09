@@ -76,7 +76,7 @@ export default function Layout() {
                         </div>
                     </div>
                 </div>
-                <BottomNavbar />
+                <BottomNavbar isMediumSize={isMediumSize} />
             </div>
             <div className={`${showCalls && isMediumSize ? 'block absolute top-0 left-0 z-10 w-full h-full' : 'hidden'} md:block md:basis-4/6 bg-slate-200`}>
                 <div className='h-1/6 p-3 bg-white flex items-center justify-between'>

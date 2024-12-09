@@ -4,7 +4,7 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import { CallOutlined, EmailOutlined, GroupsOutlined, SettingsOutlined } from '@mui/icons-material';
 import { usePathname } from 'next/navigation';
 
-export default function BottomNavbar() {
+export default function BottomNavbar({isMediumSize}:{isMediumSize: boolean}) {
     const activePath = usePathname();
     const [value, setValue] = React.useState(activePath.split('/')[1] || 'messages');
     React.useEffect(() => {
@@ -24,6 +24,9 @@ export default function BottomNavbar() {
         }
     }, []);
 
+    if (!isMediumSize) {
+        return <></>;
+    }
 
     return (
         <>
@@ -48,8 +51,8 @@ export default function BottomNavbar() {
                     value="settings"
                     icon={<SettingsOutlined />}
                 />
+                <span ref={navbarRef} className="h-0"></span>
             </BottomNavigation>
-            <span ref={navbarRef} className="h-0"></span>
         </>
     );
 }
