@@ -10,10 +10,16 @@ import { Button, IconButton, TextField } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/router'
 import React, { useEffect, useRef, useState } from 'react'
 
 
 export default function Page() {
+    const router = useRouter()
+
+    if (router.isFallback) {
+        return <div>Loading...</div>
+    }
     const searchParams = useSearchParams();
     const [showMessages, setShowMessages] = useState(false);
     const [isMediumSize, setIsMediumSize] = useState(false);
