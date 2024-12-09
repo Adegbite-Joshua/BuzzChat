@@ -11,7 +11,7 @@ export default function RecentCall() {
                 <img src={`/logo.png`} alt={`Another friend`} className='h-12 w-12 aspect-square rounded-full' />
             </div>
             <div className='col-span-7 flex justify-between cursor-pointer '>
-                <Link href={'/calls?calls=true'} className='flex flex-col justify-between items-stretch'>
+                <Link href={'/calls/calls'} className='flex flex-col justify-between items-stretch'>
                     <p className="font-bold">Chinedu Oyenre</p>
                     <div className='flex items-center gap-2'>
                         <CallMadeOutlined className='text-sm md:text-base text-green-500' />
