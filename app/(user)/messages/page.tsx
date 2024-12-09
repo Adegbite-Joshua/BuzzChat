@@ -28,7 +28,7 @@ export default function Page() {
         setAnchorEl(null);
     };
 
-    const handleSelectAttachment = (type: string) => {
+    const handleSelectAttachment = () => {
 
     };
 

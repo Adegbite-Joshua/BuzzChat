@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Button, Card, CardContent, CardActions } from '@mui/material';
+import { Typography, Button, Card, CardContent, CardActions } from '@mui/material';
 import { motion } from 'framer-motion';
 
 export default function CallNotification({ callType = 'Voice' }) {
