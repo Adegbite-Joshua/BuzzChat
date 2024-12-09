@@ -3,7 +3,7 @@
 import AuthenticatedLayout from '@/components/AuthenticatedLayout'
 import RecentCall from '@/components/calls/RecentCall'
 import BottomNavbar from '@/components/navbar/BottomNavbar'
-import { CallOutlined, DeleteOutline, EditOutlined, EmailOutlined, MoreHorizOutlined, RecentActors, SearchOutlined, VideocamOutlined } from '@mui/icons-material'
+import { CallOutlined, DeleteOutline, EditOutlined, EmailOutlined, RecentActors, SearchOutlined, VideocamOutlined } from '@mui/icons-material'
 import { Button, IconButton } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'

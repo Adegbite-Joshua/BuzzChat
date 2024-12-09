@@ -48,7 +48,6 @@ export default function BottomNavbar() {
                     value="settings"
                     icon={<SettingsOutlined />}
                 />
-                {/* <BottomNavigationAction label="Folder" value="folder" icon={<FolderIcon />} /> */}
             </BottomNavigation>
             <span ref={navbarRef} className="h-0"></span>
         </>
