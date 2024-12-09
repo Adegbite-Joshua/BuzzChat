@@ -12,11 +12,6 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 
 export default function Page() {
-  const router = useRouter()
- 
-  if (router.isFallback) {
-    return <div>Loading...</div>
-  }
   const [showCalls, setShowCalls] = useState(false);
   const [isMediumSize, setIsMediumSize] = useState(false);
   const searchParams = useSearchParams();
@@ -40,6 +35,13 @@ export default function Page() {
       window.removeEventListener('resize', handleResize);
     };
   }, [searchParams]);
+
+  const router = useRouter()
+ 
+  if (router.isFallback) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div className='basis-full md:basis-10/12 flex'>
       <div className="basis-full md:basis-2/6 border-r border-slate-200">

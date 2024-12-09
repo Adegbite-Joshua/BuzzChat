@@ -15,11 +15,6 @@ import React, { useEffect, useRef, useState } from 'react'
 
 
 export default function Page() {
-    const router = useRouter()
-
-    if (router.isFallback) {
-        return <div>Loading...</div>
-    }
     const searchParams = useSearchParams();
     const [showMessages, setShowMessages] = useState(false);
     const [isMediumSize, setIsMediumSize] = useState(false);
@@ -63,6 +58,12 @@ export default function Page() {
             lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, []);
+
+    const router = useRouter()
+
+    if (router.isFallback) {
+        return <div>Loading...</div>
+    }
 
     return (
         <div className='basis-full md:basis-10/12 flex'>
