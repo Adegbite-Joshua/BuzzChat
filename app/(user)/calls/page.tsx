@@ -7,8 +7,7 @@ import { Button, IconButton } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 
 export default function Page() {
   const [showCalls, setShowCalls] = useState(false);
@@ -34,13 +33,8 @@ export default function Page() {
       window.removeEventListener('resize', handleResize);
     };
   }, [searchParams]);
-
-  const router = useRouter()
- 
-  if (router.isFallback) {
-    return <div>Loading...</div>
-  }
   return (
+    <Suspense fallback={<div></div>}>
       <div className='basis-full md:basis-10/12 flex'>
         <div className="basis-full md:basis-2/6 border-r border-slate-200">
           <div className='h-[10%] md:h-1/6 p-3 flex items-center justify-between'>
@@ -116,5 +110,6 @@ export default function Page() {
           </div>
         </div>
       </div>
+    </Suspense>
   )
 }
