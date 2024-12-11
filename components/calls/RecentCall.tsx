@@ -1,6 +1,6 @@
 // import { ArrowDownward, CallMadeOutlined, CallOutlined, CallReceivedOutlined, DoneAllOutlined, PhoneMissedOutlined } from '@mui/icons-material'
 import { CallMadeOutlined, CallOutlined } from '@mui/icons-material'
-import { IconButton } from '@mui/material'
+import { IconButton, Tooltip } from '@mui/material'
 import Link from 'next/link'
 import React from 'react'
 
@@ -21,9 +21,11 @@ export default function RecentCall() {
                     </div>
                 </Link>
                 <div className='flex justify-between items-center'>
-                    <IconButton className='inline'>
-                        <CallOutlined fontSize='large' className='text-slate-400' />
-                    </IconButton>
+                    <Tooltip title="Call">
+                        <IconButton className='inline'>
+                            <CallOutlined fontSize='large' className='text-slate-400' />
+                        </IconButton>
+                    </Tooltip>
                 </div>
             </div>
         </div>

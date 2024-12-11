@@ -4,12 +4,16 @@
 import RecentCall from '@/components/calls/RecentCall'
 import BottomNavbar from '@/components/navbar/BottomNavbar'
 import { CallOutlined, DeleteOutline, EditOutlined, EmailOutlined, ExpandLess, ExpandMore, RecentActors, SearchOutlined, VideocamOutlined } from '@mui/icons-material'
-import { Button, Collapse, IconButton } from '@mui/material'
+import { Box, Button, Collapse, IconButton } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation';
-
+import FriendRequest from '@/components/people/FriendRequest'
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 
 export default function Layout() {
     const [showCalls, setShowCalls] = useState(false);
@@ -40,6 +44,37 @@ export default function Layout() {
     const handleOpenFriendRequestsToggle = () => {
         setOpenFriendRequests(!openFriendRequests);
     };
+
+    const [requests, setRequests] = useState([
+        {
+            id: 1,
+            name: 'John Doe',
+            details: 'Software Engineer at ABC Corp',
+            imageUrl: 'https://via.placeholder.com/50',
+        },
+        {
+            id: 2,
+            name: 'Alice Smith',
+            details: 'Product Designer at XYZ Inc.',
+            imageUrl: 'https://via.placeholder.com/50',
+        },
+    ]);
+
+    const handleAccept = (id: number) => {
+        setRequests((prev) => prev.filter((request) => request.id !== id));
+        alert(`Friend request from ID ${id} accepted!`);
+    };
+
+    const handleDelete = (id: number) => {
+        setRequests((prev) => prev.filter((request) => request.id !== id));
+        alert(`Friend request from ID ${id} deleted!`);
+    };
+
+    const [tabValue, settabValue] = React.useState('1');
+
+    const handleChange = (event: React.SyntheticEvent, newtabValue: string) => {
+        settabValue(newtabValue);
+    };
     return (
         <div className='basis-full md:basis-10/12 flex'>
             <div className="basis-full md:basis-2/6 border-r border-slate-200">
@@ -62,34 +97,39 @@ export default function Layout() {
                 <hr />
                 <div className='h-[80%] md:h-5/6 p-3 overflow-auto scrollbar-hidden'>
                     <div>
-                        {/* Header with Friend request and icon */}
-                        {/* <div className='text-slate-400 flex text-sm gap-3 p-2'> */}
-                        {/* Toggle button for collapsing */}
-                        <IconButton className='text-slate-400' onClick={handleOpenFriendRequestsToggle}>
-                            <RecentActors fontSize='small' />
-                            <span className='text-sm'>Friend request</span>
-                            {openFriendRequests ? <ExpandLess /> : <ExpandMore />}
-                        </IconButton>
-                        {/* </div> */}
+                        <Box sx={{ width: '100%', typography: 'body1' }}>
+                            <TabContext value={tabValue}>
+                                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                    <TabList onChange={handleChange} aria-label="lab API tabs example">
+                                        <Tab label="Friends" value="friends" />
+                                        <Tab label="Request" value="requests" />
+                                        <Tab label="Find People" value="find" />
+                                    </TabList>
+                                </Box>
+                                <TabPanel value="friends">
+                                    <IconButton className='text-slate-400' onClick={handleOpenFriendRequestsToggle}>
+                                        <RecentActors fontSize='small' />
+                                        <span className='text-sm'>Friend request</span>
+                                    </IconButton>
 
-                        {/* Collapsible section */}
-                        <Collapse in={openFriendRequests}>
-                            <div>
-                                {/* RecentCall components */}
-                                <RecentCall />
-                                <RecentCall />
-                                <RecentCall />
-                                <RecentCall />
-                                <RecentCall />
-                                <RecentCall />
-                                <RecentCall />
-                                <RecentCall />
-                                <RecentCall />
-                                <RecentCall />
-                                <RecentCall />
-                                <RecentCall />
-                            </div>
-                        </Collapse>
+                                    <div>
+                                        {requests.map((request) => (
+                                            <FriendRequest
+                                                key={request.id}
+                                                name={request.name}
+                                                details={request.details}
+                                                imageUrl={request.imageUrl}
+                                                onAccept={() => handleAccept(request.id)}
+                                                onDelete={() => handleDelete(request.id)}
+                                            />
+                                        ))}
+                                    </div>
+                                </TabPanel>
+                                <TabPanel value="requests">Item Two</TabPanel>
+                                <TabPanel value="find">Item Three</TabPanel>
+                            </TabContext>
+                        </Box>
+
                     </div>
                 </div>
                 <BottomNavbar isMediumSize={isMediumSize} />

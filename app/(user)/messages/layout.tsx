@@ -12,7 +12,7 @@ import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation';
 
-export const ActionButtons = ({type, isMessagesSelected}: {type?: string, isMessagesSelected?: boolean}) => {
+export const ActionButtons = ({ type, isMessagesSelected }: { type?: string, isMessagesSelected?: boolean }) => {
     if (isMessagesSelected && type == 'messages') {
         return (
             <div className="flex text-slate-400 gap-3 items-center">
@@ -69,11 +69,9 @@ export const ActionButtons = ({type, isMessagesSelected}: {type?: string, isMess
 export default function Layout() {
     const [showMessages, setShowMessages] = useState(false);
     const [isMediumSize, setIsMediumSize] = useState(false);
-    const [isMessagesSelected, setIsMessagesSelected] = useState(false);
     const [selectedMessages, setSelectedMessages] = useState<string[]>([]);
+    const [isMessagesSelected, setIsMessagesSelected] = useState(false);
     const params = useParams();
-
-
 
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -89,10 +87,31 @@ export default function Layout() {
 
     };
 
-    const handleSetSelectedMessages = () => {
-        setIsMessagesSelected(!isMessagesSelected);
-        setSelectedMessages(isMessagesSelected? [...selectedMessages, '123'] : []);
+    useEffect(() => {
+        console.log("Selected Messages:", selectedMessages);
+        setIsMessagesSelected(selectedMessages.length > 0);
+      }, [selectedMessages]);
+
+    const handleSetSelectedMessages = (messageId: string) => {     
+        console.log('setting');
+           
+        setSelectedMessages((prev) => {
+            if (prev.includes(messageId)) {
+                return prev.filter((id) => id !== messageId);
+            } else {
+                return [...prev, messageId];
+            }
+        });
+
     };
+
+    useEffect(() => {
+      selectedMessages.length > 0 ? setIsMessagesSelected(true) : setIsMessagesSelected(false);
+    }, [selectedMessages]);
+
+    console.log(selectedMessages);
+    
+    
 
     useEffect(() => {
         const handleResize = () => {
@@ -187,22 +206,22 @@ export default function Layout() {
                         </IconButton>
 
                         <Fade in={isSearchVisible}>
-                                <div className="absolute right-0 top-full mt-2 w-64">
-                                    <TextField
-                                        inputRef={searchInputRef}
-                                        variant="outlined"
-                                        size="small"
-                                        placeholder="Search messages..."
-                                        onChange={handleSearch}
-                                        autoComplete="off"
-                                        fullWidth
-                                        sx={{
-                                            backgroundColor: 'white',
-                                            borderRadius: '4px',
-                                            boxShadow: 1,
-                                        }}
-                                    />
-                                </div>
+                            <div className="absolute right-0 top-full mt-2 w-64">
+                                <TextField
+                                    inputRef={searchInputRef}
+                                    variant="outlined"
+                                    size="small"
+                                    placeholder="Search messages..."
+                                    onChange={handleSearch}
+                                    autoComplete="off"
+                                    fullWidth
+                                    sx={{
+                                        backgroundColor: 'white',
+                                        borderRadius: '4px',
+                                        boxShadow: 1,
+                                    }}
+                                />
+                            </div>
                         </Fade>
                     </div>
                 </div>
@@ -266,11 +285,11 @@ export default function Layout() {
                                 <ReceiverMessage />
                                 <ReceiverMessage />
                                 <ReceiverMessage />
-                                <SenderMessage handleSetSelectedMessages={handleSetSelectedMessages} isMessagesSelected={isMessagesSelected} />
+                                {["1", "2", "3"].map((id) => (
+                                    <SenderMessage key={id} messageId={id} selectedMessages={selectedMessages} handleSetSelectedMessages={handleSetSelectedMessages} isMessagesSelected={isMessagesSelected} />
+                                ))}
                                 <ReceiverMessage />
-                                <SenderMessage handleSetSelectedMessages={handleSetSelectedMessages} isMessagesSelected={isMessagesSelected} />
-                                <SenderMessage handleSetSelectedMessages={handleSetSelectedMessages} isMessagesSelected={isMessagesSelected} />
-                                <SenderMessage handleSetSelectedMessages={handleSetSelectedMessages} isMessagesSelected={isMessagesSelected} />
+                                
                                 <span ref={lastMessageRef} className="h-0"></span>
                             </div>
                         </div>

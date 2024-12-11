@@ -1,30 +1,36 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 
-export default function SenderMessage({isMessagesSelected, handleSetSelectedMessages}: {isMessagesSelected: boolean, handleSetSelectedMessages: ()=>any}){
-  const [isSelected, setIsSelected] = useState(false)
-  let pressTimer: any = null;
+export default function SenderMessage({ isMessagesSelected, handleSetSelectedMessages, selectedMessages, messageId }: { isMessagesSelected: boolean, handleSetSelectedMessages: (messageId:  string) => any, selectedMessages: string[], messageId: string }) {
+  const isSelected = selectedMessages.includes(messageId);
+
+  let pressTimer: any = null;  
 
   const handleLongPressStart = () => {
-    // Start the timer
     pressTimer = setTimeout(() => {
       console.log("Long Press Triggered!");
-      setIsSelected(prev => !prev);
-    }, 500); // 500ms threshold
+      handleSetSelectedMessages(messageId);
+    }, 500);
   };
 
   const handleLongPressEnd = () => {
-    // Clear the timer
+    if(!pressTimer) return;
     clearTimeout(pressTimer);
   };
 
+
+  const handleClick = () => {
+    handleSetSelectedMessages(messageId);
+  };
   return (
     <div
       className='flex gap-3 ms-auto max-w-[300px] my-2 md:w-auto'
-      onMouseDown={handleLongPressStart}
-      onMouseUp={handleLongPressEnd}
-      onMouseLeave={handleLongPressEnd}
-      onTouchStart={handleLongPressStart}
-      onTouchEnd={handleLongPressEnd}>
+      onMouseDown={!isMessagesSelected ? handleLongPressStart : undefined}
+      onMouseUp={!isMessagesSelected ? handleLongPressEnd : undefined}
+      onMouseLeave={!isMessagesSelected ? handleLongPressEnd : undefined}
+      onTouchStart={!isMessagesSelected ? handleLongPressStart : undefined}
+      onTouchEnd={!isMessagesSelected ? handleLongPressEnd : undefined}
+    onClick={isMessagesSelected ? handleClick : undefined}
+    >
       <div>
         <div className='flex items-end justify-end gap-3'>
           <small className='text-slate-400'>05:01 PM</small>
