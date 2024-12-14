@@ -1,7 +1,7 @@
 import { Button } from '@mui/material'
 import Link from 'next/link'
 import React from 'react'
-import { CallOutlined, GroupsOutlined, SettingsOutlined, EmailOutlined, PeopleAltOutlined } from '@mui/icons-material'
+import { CallOutlined, GroupsOutlined, SettingsOutlined, EmailOutlined, PeopleAltOutlined, ScheduleOutlined } from '@mui/icons-material'
 import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 
@@ -17,13 +17,12 @@ export default function AuthenticatedNavbar() {
         }>BUZZCHAT</Button>
       </div>
       <hr />
+      <Link href={'/people'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '/people' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><PeopleAltOutlined fontSize='medium' /> <span>People</span></Link>
       <Link href={'/messages'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '/messages' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><EmailOutlined fontSize='medium' /> <span>Messages</span></Link>
+      <Link href={'/calls'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '/calls' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><CallOutlined fontSize='medium' /> <span>Calls</span></Link>
+      <Link href={'/highlights'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '/highlights' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><ScheduleOutlined fontSize='medium' /> <span>Highlights</span></Link>
       <Link href={'/groups'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '/groups' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><GroupsOutlined fontSize='medium' /> <span>Groups</span></Link>
       <Link href={'/settings'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><SettingsOutlined fontSize='medium' /> <span>Settings</span></Link>
-      <Link href={'/calls'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '/calls' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><CallOutlined fontSize='medium' /> <span>Calls</span></Link>
-      <Link href={'/people'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '/people' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><PeopleAltOutlined fontSize='medium' /> <span>People</span></Link>
-      <Link href={'/'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><EmailOutlined fontSize='medium' /> <span>Messages</span></Link>
-      <Link href={'/'} className={`flex items-center justify-start gap-3 p-2 my-2 ${activePath == '' ? 'bg-blue-600 text-white rounded-lg text-sm' : 'text-slate-400'}`}><EmailOutlined fontSize='medium' /> <span>Messages</span></Link>
     </nav>
   )
 }

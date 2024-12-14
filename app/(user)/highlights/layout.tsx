@@ -18,7 +18,7 @@ import Avatar from "@mui/material/Avatar";
 
 
 
-export default function Layout() {
+export default function Layout({children}: {children: React.ReactNode}) {
     const [showCalls, setShowCalls] = useState(false);
     const [isMediumSize, setIsMediumSize] = useState(false);
     const params = useParams();
@@ -199,33 +199,7 @@ export default function Layout() {
                 </div>
                 <hr />
                 <div className="h-5/6 p-3 relative flex flex-col items-center bg-gray-100">
-                    <div className="flex flex-col justify-center items-center mt-6">
-                        <Avatar
-                            src="https://via.placeholder.com/150"
-                            alt="Profile"
-                            className="w-28 h-28"
-                        />
-                        <div>
-                            <p className="text-2xl">Adegbite Joshua</p>
-                            <div className='flex gap-5'>
-                                <p><span className='font-semibold'>20</span> friends</p>
-                                <p><span className='font-semibold'>20</span> friends</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='flex gap-5 my-2 font-semibold'>
-                        <button className='p-2 bg-slate-300 text-blue-600 flex gap-2 items-center rounded-md'>
-                            <PersonRemoveOutlined/>
-                            Unfriend
-                        </button>
-                        <button className='p-2 bg-blue-600 text-white flex gap-2 items-center rounded-md'>
-                            <ChatOutlined/>
-                            Message
-                        </button>
-                    </div>
-                    <div>
-                        <p>From <span className='font-semibold'>Ogbomoso, Nigeria</span></p>
-                    </div>
+                    {children}
                 </div>
             </div>
         </div>
