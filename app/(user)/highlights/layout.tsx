@@ -87,23 +87,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         },
     ]);
 
-
-
-    const handleAccept = (id: number) => {
-        setRequests((prev) => prev.filter((request) => request.id !== id));
-        alert(`Friend request from ID ${id} accepted!`);
-    };
-
-    const handleDelete = (id: number) => {
-        setRequests((prev) => prev.filter((request) => request.id !== id));
-        alert(`Friend request from ID ${id} deleted!`);
-    };
-
-    const [tabValue, settabValue] = React.useState('friends');
-
-    const handleChange = (event: React.SyntheticEvent, newtabValue: string) => {
-        settabValue(newtabValue);
-    };
+    const [tabValue, settabValue] = React.useState('highlights');
 
     const [highlights, setHighlights] = useState([
         {
@@ -135,7 +119,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     "postId": "post003",
                     "type": "video",
                     "content": {
-                        "url": "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
+                        "url": "https://www.w3schools.com/html/mov_bbb.mp4",
                         "caption": "A quick tutorial I found useful!"
                     },
                     "timestamp": "2024-12-22T12:00:00Z",
@@ -172,31 +156,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         }
     ]);
 
-    const getHighlightUploadTime = (isoTimestamp: string): string => {
-        const date = new Date(isoTimestamp); // Parse the ISO string to a Date object
-        const now = new Date(); // Current date and time
-
-        // Convert both dates to numbers (milliseconds since Unix epoch)
-        const diffMs = now.getTime() - date.getTime(); // Time difference in milliseconds
-        const diffSec = Math.floor(diffMs / 1000);
-        const diffMin = Math.floor(diffSec / 60);
-        const diffHr = Math.floor(diffMin / 60);
-        const diffDays = Math.floor(diffHr / 24);
-
-        if (diffSec < 60) return `${diffSec} seconds ago`;
-        if (diffMin < 60) return `${diffMin} minutes ago`;
-        if (diffHr < 24) return `${diffHr} hours ago`;
-        if (diffDays < 7) return `${diffDays} days ago`;
-        return date.toLocaleString(); // Fallback to full date and time
-    }
-
     const [currentUserIndex, setCurrentUserIndex] = useState(0);
     const [currentPostIndex, setCurrentPostIndex] = useState(0);
     const [posts, setPosts] = useState(highlights[currentUserIndex].posts);
     useEffect(() => {
-      setPosts(highlights[currentUserIndex].posts);
+        setPosts(highlights[currentUserIndex].posts);
     }, [currentPostIndex, currentUserIndex])
-    
+
     const currentUser = highlights[currentUserIndex];
     const currentPost = currentUser.posts[currentPostIndex];
 
@@ -247,6 +213,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         );
     };
 
+    const [imageLoaded, setImageLoaded] = useState(false);
+
     const renderPost = () => {
         if (highlights[currentUserIndex].posts[currentPostIndex].viewed == false) {
             setHighlights(prev => {
@@ -263,41 +231,56 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 return updatedHighlights;
             });
         }
+        // setImageLoaded(false);
+        // const handleImageLoad = () => {
+        //     setImageLoaded(true); // When the high-res image is loaded, set this to true
+        // };
 
         switch (currentPost.type) {
             case "text":
-                return <p id={`${Math.random()}`} className='bg-red-300'>{currentPost.content as string}</p>;
+                return <div className='h-full w-full bg-green-500 overflow-auto scrollbar-hidden'>
+                    <p className='font-semibold p-12 text-center'>{currentPost.content as string}</p>
+                </div>;
             case "image":
                 return (
-                    <div id={`${Math.random()}`}>
+                    <div className='w-full h-full relative' id={`${Math.random()}`}>
                         <img
                             src={(currentPost.content as StatusContent).url!}
                             alt="status"
-                            style={{ width: "300px", height: "200px" }}
+                            className={`w-full h-full transition-all duration-1000 ease-in-out ${imageLoaded ? 'blur-0' : 'blur-sm'}`}
+                            // onLoad={handleImageLoad}
                         />
-                        <p>{(currentPost.content as StatusContent).caption}</p>
+                        <p className='absolute bottom-0 text-center z-20 left-0 w-full'>{(currentPost.content as StatusContent).caption}</p>
                     </div>
                 );
             case "video":
+                const handleContextMenu = (e: any) => {
+                    e.preventDefault(); // Disable right-click context menu
+                };
                 return (
-                    <div id={`${Math.random()}`}>
-                        <video
-                            controls
+                    <div className='w-full h-full relative bg-blue-400' id={`${Math.random()}`}>
+                        {/* <video
                             autoPlay
-                            style={{ width: "300px", height: "200px" }}
+                            loop={true}
+                            className='w-full h-full'
+                            playsInline
+                            style={{ pointerEvents: "none" }}
+                            onContextMenu={handleContextMenu} // P
                         >
                             <source
                                 src={(currentPost.content as StatusContent).url!}
                                 type="video/mp4"
                             />
-                        </video>
-                        <p>{(currentPost.content as StatusContent).caption}</p>
+                        </video> */}
+                        <p className='absolute bottom-0 text-center z-20 left-0 w-full'>{(currentPost.content as StatusContent).caption}</p>
                     </div>
                 );
             default:
                 return null;
         }
     };
+
+
 
     return (
         <div className='basis-full md:basis-10/12 flex'>
@@ -314,7 +297,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <div className='h-[80%] md:h-5/6 p-3 overflow-auto scrollbar-hidden'>
                     <div>
                         {highlights.map((highlight, index) => (
-                            <User highlight={highlight} index={index} setCurrentPostIndex={setCurrentPostIndex} setCurrentUserIndex={setCurrentUserIndex}/>
+                            <User highlight={highlight} index={index} setCurrentPostIndex={setCurrentPostIndex} setCurrentUserIndex={setCurrentUserIndex} />
                         ))}
                     </div>
                 </div>
@@ -341,19 +324,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         <IconButton>
                             <CallOutlined fontSize='large' />
                         </IconButton>
-                        
+
                     </div>
                 </div>
                 <hr />
                 <div className="h-5/6 p-3 relative flex flex-col items-center bg-gray-100">
-                    <div className="relative w-full h-screen bg-gray-900 text-white flex flex-col items-center justify-center">
+                    <div className="relative w-full h-full text-white flex flex-col items-center justify-center">
                         {/* Progress Bars */}
                         <div className="absolute top-0 left-0 right-0 flex justify-between px-2 py-1">
                             {posts.map((_, index) => (
-                                <div
-                                    key={index}
-                                    className="h-1 flex-1 mx-1 bg-gray-500 rounded overflow-hidden"
-                                >
+                                <div key={index} className="h-1 flex-1 mx-1 bg-gray-500 rounded overflow-hidden" >
                                     <div
                                         className={`h-full ${index === currentPostIndex
                                             ? "bg-green-500"
@@ -369,7 +349,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         </div>
 
                         {/* Post Content */}
-                        <div className="flex flex-col items-center justify-center w-full h-full px-4">
+                        <div className="flex flex-col items-center justify-center w-full h-full">
                             {renderPost()}
                         </div>
 
