@@ -1,5 +1,6 @@
 import { AspectRatioOutlined, CallEndOutlined, CameraswitchOutlined, MicNoneOutlined, MicOffOutlined, VideocamOffOutlined, VideocamOutlined, ScreenShareOutlined, StopScreenShareOutlined } from '@mui/icons-material';
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 export default function OnVideoCall({ isCaller = false }) {
     const [isFullScreen, setIsFullScreen] = useState(true);
@@ -16,6 +17,10 @@ export default function OnVideoCall({ isCaller = false }) {
     useEffect(() => {
         const getCameras = async () => {
             try {
+                if (navigator.mediaDevices == undefined) {
+                    toast.info('Browser incompatible, please try updating your browser');
+                    return;
+                }
                 const devices = await navigator.mediaDevices.enumerateDevices();
                 const videoDevices = devices.filter(device => device.kind === 'videoinput');
                 setCameras(videoDevices);

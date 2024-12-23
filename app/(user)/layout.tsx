@@ -3,6 +3,8 @@
 
 import AuthenticatedNavbar from '@/components/navbar/AuthenticatedNavbar'
 import React from 'react'
+import OnVideoCall from "@/components/calls/OnVideoCall";
+import CallNotification from "@/components/calls/CallNotification";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     return (
