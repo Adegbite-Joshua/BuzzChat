@@ -1,21 +1,12 @@
 "use client"
 
 import BottomNavbar from '@/components/navbar/BottomNavbar'
-import { CallOutlined, DeleteOutline, EditOutlined, EmailOutlined, RecentActors, SearchOutlined, VideocamOutlined, PersonRemoveOutlined, ChatOutlined } from '@mui/icons-material'
-import { Box, Button, IconButton } from '@mui/material'
+import { CallOutlined, EmailOutlined, VideocamOutlined, ChevronLeftOutlined } from '@mui/icons-material'
+import { Button, IconButton } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation';
-import FriendRequest from '@/components/people/FriendRequest'
-import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
-import Friend from '@/components/people/Friend'
-import AddUser from '@/components/people/AddUser'
-import Avatar from "@mui/material/Avatar";
-import DividedBorders from '@/components/highlights/DividedBorder'
 import User from '@/components/highlights/User'
 
 
@@ -43,7 +34,7 @@ interface User {
 
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-    const [showCalls, setShowCalls] = useState(false);
+    const [showHighlights, setShowHighlights] = useState(false);
     const [isMediumSize, setIsMediumSize] = useState(false);
     const params = useParams();
 
@@ -55,7 +46,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         };
 
         const { id } = params;
-        setShowCalls(id ? true : false);
+        setShowHighlights(id ? true : false);
 
         handleResize();
 
@@ -68,26 +59,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
     const [openFriendRequests, setOpenFriendRequests] = useState(true);
 
-    const handleOpenFriendRequestsToggle = () => {
-        setOpenFriendRequests(!openFriendRequests);
-    };
 
-    const [requests, setRequests] = useState([
-        {
-            id: 1,
-            name: 'John Doe',
-            details: 'Software Engineer at ABC Corp',
-            imageUrl: 'https://via.placeholder.com/50',
-        },
-        {
-            id: 2,
-            name: 'Alice Smith',
-            details: 'Product Designer at XYZ Inc.',
-            imageUrl: 'https://via.placeholder.com/50',
-        },
-    ]);
 
-    const [tabValue, settabValue] = React.useState('highlights');
+   
+
+    // const [tabValue, settabValue] = React.useState('highlights');
 
     const [highlights, setHighlights] = useState([
         {
@@ -213,7 +189,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         );
     };
 
-    const [imageLoaded, setImageLoaded] = useState(false);
+    const [imageLoaded, setImageLoaded] = useState(true);
 
     const renderPost = () => {
         if (highlights[currentUserIndex].posts[currentPostIndex].viewed == false) {
@@ -230,6 +206,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 };
                 return updatedHighlights;
             });
+        }
+        if (1<=0) {
+            setImageLoaded(true);
         }
         // setImageLoaded(false);
         // const handleImageLoad = () => {
@@ -254,9 +233,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     </div>
                 );
             case "video":
-                const handleContextMenu = (e: any) => {
-                    e.preventDefault(); // Disable right-click context menu
-                };
+                // const handleContextMenu = (e: any) => {
+                //     e.preventDefault(); // Disable right-click context menu
+                // };
                 return (
                     <div className='w-full h-full relative bg-blue-400' id={`${Math.random()}`}>
                         {/* <video
@@ -280,8 +259,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         }
     };
 
-
-
     return (
         <div className='basis-full md:basis-10/12 flex'>
             <div className="basis-full md:basis-2/6 border-r border-slate-200">
@@ -303,9 +280,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </div>
                 <BottomNavbar isMediumSize={isMediumSize} />
             </div>
-            <div className={`${showCalls && isMediumSize ? 'block absolute top-0 left-0 z-10 w-full h-full' : 'hidden'} md:block md:basis-4/6 bg-slate-200`}>
+            <div className={`${showHighlights && isMediumSize ? 'block absolute top-0 left-0 z-10 w-full h-full' : 'hidden'} md:block md:basis-4/6 bg-slate-200`}>
                 <div className='h-1/6 p-3 bg-white flex items-center justify-between'>
                     <div className='flex gap-3'>
+                        <Link href={'/highlights'}>
+                            <ChevronLeftOutlined fontSize='large' />
+                        </Link>
                         <Link href={'/messages'} className='flex justify-center items-center'>
                             <img src={`/logo.png`} alt={`Another friend`} className='h-12 w-12 aspect-square rounded-full' />
                         </Link>

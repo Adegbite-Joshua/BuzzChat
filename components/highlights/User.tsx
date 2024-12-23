@@ -1,5 +1,6 @@
 import React from 'react';
 import DividedBorders from './DividedBorder';
+import Link from 'next/link';
 
 interface UserProps {
     index: number;
@@ -48,7 +49,8 @@ const User: React.FC<UserProps> = ({ index, highlight, setCurrentUserIndex, setC
     }
 
     return (
-        <div
+        <Link
+            href={`/highlights/highlight`}
             id={`user-${index}`}
             onClick={handleUserClick}
             className="flex items-center gap-2 cursor-pointer my-1 bg-slate-100 rounded-md"
@@ -61,7 +63,7 @@ const User: React.FC<UserProps> = ({ index, highlight, setCurrentUserIndex, setC
                 <p className="text-2xl">{highlight.username}</p>
                 <small>{getHighlightUploadTime(highlight.posts[0].timestamp)}</small>
             </div>
-        </div>
+        </Link>
     );
 };
 

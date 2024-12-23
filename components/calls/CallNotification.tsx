@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Button, Card, CardContent, CardActions } from '@mui/material';
 import { motion } from 'framer-motion';
 
-export default function CallNotification({ callType = 'Voice' }) {
+export default function CallNotification({ callType = 'Voice', setShowVideoCall }: {callType?: string, setShowVideoCall: (value: boolean) => void}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: -50 }}
@@ -25,7 +25,7 @@ export default function CallNotification({ callType = 'Voice' }) {
             className='animate-bounce duration-150'
             variant="contained"
             sx={{ bgcolor: 'green', color: 'white', '&:hover': { bgcolor: 'darkgreen' } }}
-            onClick={() => console.log('Call Answered')}
+            onClick={() => setShowVideoCall(true)}
           >
             Answer
           </Button>

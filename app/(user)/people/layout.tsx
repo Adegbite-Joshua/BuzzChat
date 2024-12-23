@@ -42,12 +42,6 @@ export default function Layout() {
         };
     }, [params]);
 
-    const [openFriendRequests, setOpenFriendRequests] = useState(true);
-
-    const handleOpenFriendRequestsToggle = () => {
-        setOpenFriendRequests(!openFriendRequests);
-    };
-
     const [requests, setRequests] = useState([
         {
             id: 1,
@@ -77,6 +71,8 @@ export default function Layout() {
 
     const handleChange = (event: React.SyntheticEvent, newtabValue: string) => {
         settabValue(newtabValue);
+        console.log(event);
+        
     };
     return (
         <div className='basis-full md:basis-10/12 flex'>

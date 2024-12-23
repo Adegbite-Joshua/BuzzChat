@@ -159,6 +159,9 @@ export default function Layout() {
         setFilteredMessages(filtered);
     };
 
+    console.log(filteredMessages);
+    
+
     useEffect(() => {
         if (isSearchVisible && searchInputRef.current) {
             // searchInputRef.current.focus();
