@@ -15,6 +15,7 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Link from 'next/link';
+import axios from 'axios';
 
 const Form = () => {
   const formik = useFormik({
@@ -22,6 +23,7 @@ const Form = () => {
       firstName: '',
       lastName: '',
       email: '',
+      bio: '',
       password: '',
       phoneNumber: '',
       dateOfBirth: '',
@@ -35,6 +37,8 @@ const Form = () => {
       lastName: Yup.string()
         .required('Last name is required')
         .min(2, 'Must be at least 2 characters'),
+      bio: Yup.string()
+        .required('Bio is required'),
       email: Yup.string().email('Invalid email').required('Email is required'),
       password: Yup.string()
         .required('Password is required')
@@ -65,7 +69,17 @@ const Form = () => {
     }),
     onSubmit: (values) => {
       console.log(values);
-      toast.success('Sign up successful');
+      axios.post(`/api/user/signup`, values)
+        .then(response => {
+          toast.success('Sign up successful');
+        })
+        .catch(error => {
+          console.log(error);
+          if (error?.response.status === 400) {
+            return toast.error("Email already in use");
+          }
+          toast.error('Something went wrong, try again');
+        });
     },
   });
 
@@ -170,6 +184,22 @@ const Form = () => {
                 formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)
               }
               helperText={formik.touched.phoneNumber && String(formik.errors.phoneNumber || '')}
+            />
+          </Grid>
+
+          {/* Bio */}
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Bio"
+              name="bio"
+              value={formik.values.bio}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.bio && Boolean(formik.errors.bio)
+              }
+              helperText={formik.touched.bio && String(formik.errors.bio || '')}
             />
           </Grid>
 

@@ -2,17 +2,17 @@ import { AspectRatioOutlined, CallEndOutlined, CameraswitchOutlined, MicNoneOutl
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
-export default function OnVideoCall({ isCaller = false }) {
+export default function OnVideoCall({ isCaller = false, setShowVideoCall }) {
     const [isFullScreen, setIsFullScreen] = useState(true);
     const [videoToggles, setVideoToggles] = useState({
         video: true,
         audio: true,
     });
     const [stream, setStream] = useState(null);
-    const [screenStream, setScreenStream] = useState(null); // To store the screen share stream
+    const [screenStream, setScreenStream] = useState(null);
     const [cameras, setCameras] = useState([]);
     const [currentCamera, setCurrentCamera] = useState(0);
-    const [isScreenSharing, setIsScreenSharing] = useState(false); // To track if screen sharing is active
+    const [isScreenSharing, setIsScreenSharing] = useState(false);
 
     useEffect(() => {
         const getCameras = async () => {
@@ -176,7 +176,7 @@ export default function OnVideoCall({ isCaller = false }) {
                 </button>
                 <button
                     className="p-2 bg-red-500 text-white rounded-full"
-                    onClick={() => console.log('Call Ended')}
+                    onClick={() => setShowVideoCall(false)}
                 >
                     <CallEndOutlined />
                 </button>

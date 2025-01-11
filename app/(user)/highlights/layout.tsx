@@ -8,6 +8,7 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation';
 import User from '@/components/highlights/User'
+import AddHighlight from '@/components/highlights/AddHighlight'
 
 
 interface StatusContent {
@@ -61,7 +62,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
 
 
-   
+
 
     // const [tabValue, settabValue] = React.useState('highlights');
 
@@ -207,7 +208,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 return updatedHighlights;
             });
         }
-        if (1<=0) {
+        if (1 <= 0) {
             setImageLoaded(true);
         }
         // setImageLoaded(false);
@@ -227,7 +228,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                             src={(currentPost.content as StatusContent).url!}
                             alt="status"
                             className={`w-full h-full transition-all duration-1000 ease-in-out ${imageLoaded ? 'blur-0' : 'blur-sm'}`}
-                            // onLoad={handleImageLoad}
+                        // onLoad={handleImageLoad}
                         />
                         <p className='absolute bottom-0 text-center z-20 left-0 w-full'>{(currentPost.content as StatusContent).caption}</p>
                     </div>
@@ -259,6 +260,44 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const userHighlights = {
+        "userId": "user001",
+        "username": "Alice Johnson",
+        "profilePicture": {
+            "url": "https://via.placeholder.com/150",
+            "viewPage": "https://example.com/profile/user001"
+        },
+        "posts": [
+            {
+                "postId": "post001",
+                "type": "text",
+                "content": "Just finished a great book!",
+                "timestamp": "2024-12-22T10:00:00Z",
+                "viewed": false
+            },
+            {
+                "postId": "post002",
+                "type": "image",
+                "content": {
+                    "url": "https://via.placeholder.com/300",
+                    "caption": "Lovely morning walk 🌅"
+                },
+                "timestamp": "2024-12-22T11:00:00Z",
+                "viewed": false
+            },
+            {
+                "postId": "post003",
+                "type": "video",
+                "content": {
+                    "url": "https://www.w3schools.com/html/mov_bbb.mp4",
+                    "caption": "A quick tutorial I found useful!"
+                },
+                "timestamp": "2024-12-22T12:00:00Z",
+                "viewed": false
+            }
+        ]
+    };
+
     return (
         <div className='basis-full md:basis-10/12 flex'>
             <div className="basis-full md:basis-2/6 border-r border-slate-200">
@@ -273,6 +312,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <hr />
                 <div className='h-[80%] md:h-5/6 p-3 overflow-auto scrollbar-hidden'>
                     <div>
+                        <AddHighlight highlight={userHighlights} index={Math.random()} setCurrentPostIndex={setCurrentPostIndex} setCurrentUserIndex={setCurrentUserIndex} />
+
                         {highlights.map((highlight, index) => (
                             <User highlight={highlight} index={index} setCurrentPostIndex={setCurrentPostIndex} setCurrentUserIndex={setCurrentUserIndex} />
                         ))}
@@ -282,8 +323,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
             <div className={`${showHighlights && isMediumSize ? 'block absolute top-0 left-0 z-10 w-full h-full' : 'hidden'} md:block md:basis-4/6 bg-slate-200`}>
                 <div className='h-1/6 p-3 bg-white flex items-center justify-between'>
-                    <div className='flex gap-3'>
-                        <Link href={'/highlights'}>
+                    <div className='flex gap-3 items-center'>
+                        <Link className='md:hidden' href={'/highlights'}>
                             <ChevronLeftOutlined fontSize='large' />
                         </Link>
                         <Link href={'/messages'} className='flex justify-center items-center'>

@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "nodemon server.js",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production node server.js",
     "lint": "next lint"
   },
   "dependencies": {
@@ -14,16 +14,23 @@
     "@mui/icons-material": "^6.1.9",
     "@mui/lab": "^6.0.0-beta.19",
     "@mui/material": "^6.1.9",
+    "axios": "^1.7.9",
+    "bcryptjs": "^2.4.3",
     "formik": "^2.4.6",
     "framer-motion": "^11.13.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.3",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "react-draggable": "^4.4.6",
     "react-toastify": "^10.0.6",
+    "socket.io": "^4.8.1",
     "yup": "^1.5.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

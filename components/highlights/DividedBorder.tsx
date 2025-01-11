@@ -4,9 +4,11 @@ import React from "react";
 export default function DividedBorders({
   numberOfStatus = 1,
   imageUrl,
+  onClick
 }: {
   numberOfStatus: number;
   imageUrl: string;
+  onClick?: (event: any) => void;
 }) {
   const radius = 30;
   const circumference = 2 * Math.PI * radius;
@@ -23,6 +25,7 @@ export default function DividedBorders({
     <div
       className="relative flex items-center justify-center"
       style={{ width: `${svgSize}px`, height: `${svgSize}px` }}
+      onClick={onClick}
     >
       {/* SVG Circle */}
       <svg

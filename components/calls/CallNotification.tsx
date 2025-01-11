@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Button, Card, CardContent, CardActions } from '@mui/material';
 import { motion } from 'framer-motion';
 
-export default function CallNotification({ callType = 'Voice', setShowVideoCall }: {callType?: string, setShowVideoCall: (value: boolean) => void}) {
+export default function CallNotification({ callType = 'Voice', setShowVideoCall, setShowCallNotification }: {callType?: string, setShowVideoCall: (value: boolean) => void, setShowCallNotification: (value: boolean) =>void}) {
   return (
     <motion.div
       initial={{ opacity: 0, y: -50 }}
@@ -33,7 +33,7 @@ export default function CallNotification({ callType = 'Voice', setShowVideoCall 
             // className='delay-200 animate-bounce duration-150'
             variant="contained"
             sx={{ bgcolor: 'red', color: 'white', '&:hover': { bgcolor: 'darkred' } }}
-            onClick={() => console.log('Call Declined')}
+            onClick={() => setShowCallNotification(false)}
           >
             Decline
           </Button>

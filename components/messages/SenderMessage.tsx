@@ -7,7 +7,6 @@ export default function SenderMessage({ isMessagesSelected, handleSetSelectedMes
 
   const handleLongPressStart = () => {
     pressTimer = setTimeout(() => {
-      console.log("Long Press Triggered!");
       handleSetSelectedMessages(messageId);
     }, 500);
   };
