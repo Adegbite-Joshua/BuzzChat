@@ -3,6 +3,9 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { TextField, Button, Grid, Typography, Box } from '@mui/material';
 import Link from 'next/link';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 const Form = () => {
     // Validation schema
@@ -18,6 +21,8 @@ const Form = () => {
             .matches(/[0-9]/, 'Password must contain at least one number'),
     });
 
+    const router = useRouter();
+    
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -26,6 +31,14 @@ const Form = () => {
         validationSchema: loginValidationSchema,
         onSubmit: (values) => {
             console.log('Login submitted:', values);
+            axios.post(`/api/user/login`, values)
+            .then(response => {
+                router.push('/messages')
+            })
+            .catch(error => {
+                if (error?.response.status === 401) return toast.error('Invalid credentials');
+                toast.error('Something went wrong, try again')
+            });
         },
     });
 

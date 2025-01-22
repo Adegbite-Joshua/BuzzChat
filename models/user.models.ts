@@ -30,8 +30,8 @@ const userSchema = new mongoose.Schema({
   phoneNumber: {
     type: String,
     trim: true,
-    unique: true,
-    sparse: true,
+    // unique: true,
+    // sparse: true,
   },
   dateOfBirth: {
     type: Date,

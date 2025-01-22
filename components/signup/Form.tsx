@@ -16,8 +16,10 @@ import { toast } from 'react-toastify';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Link from 'next/link';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const Form = () => {
+  const router = useRouter();
   const formik = useFormik({
     initialValues: {
       firstName: '',
@@ -71,17 +73,19 @@ const Form = () => {
       console.log(values);
       axios.post(`/api/user/signup`, values)
         .then(response => {
+          router.push('/login'); 
           toast.success('Sign up successful');
         })
         .catch(error => {
           console.log(error);
           if (error?.response.status === 400) {
-            return toast.error("Email already in use");
+            return toast.error("Email or phone number already in use");
           }
           toast.error('Something went wrong, try again');
         });
     },
   });
+
 
   const [showPassword, setShowPassword] = useState(false);
 

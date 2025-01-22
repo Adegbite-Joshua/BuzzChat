@@ -11,6 +11,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation';
+import useGetUserDetails from '@/hooks/useGetUserDetails'
+import { useSocket } from '@/contexts/SocketContext'
 
 export const ActionButtons = ({ type, isMessagesSelected }: { type?: string, isMessagesSelected?: boolean }) => {
     if (isMessagesSelected && type == 'messages') {
@@ -75,6 +77,8 @@ export default function Layout() {
 
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
+    const { userDetails } = useGetUserDetails();
+
     const handleAttachmentClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -92,9 +96,7 @@ export default function Layout() {
         setIsMessagesSelected(selectedMessages.length > 0);
       }, [selectedMessages]);
 
-    const handleSetSelectedMessages = (messageId: string) => {     
-        console.log('setting');
-           
+    const handleSetSelectedMessages = (messageId: string) => {                
         setSelectedMessages((prev) => {
             if (prev.includes(messageId)) {
                 return prev.filter((id) => id !== messageId);
@@ -108,8 +110,11 @@ export default function Layout() {
     useEffect(() => {
       selectedMessages.length > 0 ? setIsMessagesSelected(true) : setIsMessagesSelected(false);
     }, [selectedMessages]);
-
-    console.log(selectedMessages);
+    const { connectToSocket } = useSocket();
+    
+    useEffect(() => {
+      connectToSocket(userDetails);
+    }, [userDetails])
     
     
 

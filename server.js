@@ -14,8 +14,27 @@ app.prepare().then(() => {
 
   const io = new Server(httpServer);
 
+  let onlineUsers = [];
+
   io.on("connection", (socket) => {
-    // ...
+    console.log("connection established", socket.id);
+
+    socket.on('addNewUser', (newUser)=>{
+      console.log("new user added", newUser);
+      user && !onlineUsers.some(user => user?.userId === newUser._id) && onlineUsers.push({
+        userId: newUser._id,
+        socketId: socket.id,
+        profile: newUser
+      });
+
+      io.emit('getAlreadyOnlineUsers', onlineUsers);
+    })
+
+    socket.on('disconnect', () => {
+      onlineUsers.filter(user => user.userId !== socket.id);
+
+      io.emit('getOnlineUsers', onlineUsers);
+    })
   });
 
   httpServer
