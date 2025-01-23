@@ -16,6 +16,8 @@ import Friend from '@/components/people/Friend'
 import AddUser from '@/components/people/AddUser'
 import Avatar from "@mui/material/Avatar";
 import { useUserDetails } from '@/contexts/UserDetailsContext'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 
 
 
@@ -74,13 +76,57 @@ export default function Layout() {
         settabValue(newtabValue);
     };
 
-    const { allUsers, fetchAllUsers, friendRequests, fetchUserFriendsRequest } = useUserDetails();
+    const { allUsers, fetchAllUsers, friendRequests, fetchUserFriendsRequest, sentFriendRequests, fetchUserSentFriendRequests } = useUserDetails();
 
     useEffect(() => {
         fetchAllUsers();
         fetchUserFriendsRequest();
+        fetchUserSentFriendRequests();
     }, [])
 
+
+    const [isSending, setIsSending] = useState(false);
+
+    async function sendFriendRequest(friendId: string) {
+        try {
+            if (!friendId) {
+                throw new Error('Friend ID is required to send a friend request.');
+            }
+
+            // Send a POST request to the API
+            const response = await axios.post(
+                '/api/user/friend-requests',
+                { friendId }, // Request body
+                { withCredentials: true } // Ensure cookies are sent with the request
+            );
+
+            // Success handling
+            toast.success('Friend request sent successfully!');
+            return response.data; // Return the response data if needed
+        } catch (error: unknown) {
+            // Handle errors gracefully
+            const errorMessage =
+                axios.isAxiosError(error) && error.response?.data?.error
+                    ? error.response.data.error
+                    : error instanceof Error
+                        ? error.message
+                        : 'An unexpected error occurred';
+            toast.error(errorMessage); // Optional: Notify user of the error
+            console.error('Error sending friend request:', errorMessage);
+            throw error; // Rethrow the error if you need to handle it elsewhere
+        }
+    }
+
+    const handleSendRequest = async (friendId: string) => {
+        setIsSending(true);
+        try {
+            await sendFriendRequest(friendId);
+        } catch (error) {
+            // Error handling is already handled within the function
+        } finally {
+            setIsSending(false);
+        }
+    };
     return (
         <div className='basis-full md:basis-10/12 flex'>
             <div className="basis-full md:basis-2/6 border-r border-slate-200">
@@ -166,7 +212,8 @@ export default function Layout() {
                                                     name={`${request.firstName} ${request.lastName}`}
                                                     details={request.bio as string}
                                                     imageUrl={''}
-                                                    onAddFriend={() => handleAccept(request._id as string)}
+                                                    isRequestSent={sentFriendRequests.includes(request._id as string)}
+                                                    onAddFriend={() => handleSendRequest(request._id as string)}
                                                 />
                                             ))}
                                     </div>

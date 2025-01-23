@@ -34,7 +34,7 @@ interface User {
 }
 
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout() {
     const [showHighlights, setShowHighlights] = useState(false);
     const [isMediumSize, setIsMediumSize] = useState(false);
     const params = useParams();
@@ -57,12 +57,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             window.removeEventListener('resize', handleResize);
         };
     }, [params]);
-
-    const [openFriendRequests, setOpenFriendRequests] = useState(true);
-
-
-
-
 
     // const [tabValue, settabValue] = React.useState('highlights');
 
@@ -315,7 +309,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         <AddHighlight highlight={userHighlights} index={Math.random()} setCurrentPostIndex={setCurrentPostIndex} setCurrentUserIndex={setCurrentUserIndex} />
 
                         {highlights.map((highlight, index) => (
-                            <User highlight={highlight} index={index} setCurrentPostIndex={setCurrentPostIndex} setCurrentUserIndex={setCurrentUserIndex} />
+                            <User key={index} highlight={highlight} index={index} setCurrentPostIndex={setCurrentPostIndex} setCurrentUserIndex={setCurrentUserIndex} />
                         ))}
                     </div>
                 </div>

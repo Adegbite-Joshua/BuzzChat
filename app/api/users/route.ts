@@ -13,9 +13,11 @@ export async function GET(req: Request) {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
         }
 
+        const { id, email, error } = decodeJwtToken(token);
+
         await connectDB();
 
-        const users = await UserModel.find({}).select('-password'); // Exclude the password
+        const users = await UserModel.find({ _id: { $ne: id } }).select('-password');
 
         return NextResponse.json({ message: 'Users details retrieved successfully', users }, { status: 200 });
     } catch (error) {

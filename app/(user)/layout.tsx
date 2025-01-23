@@ -21,7 +21,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         axios.get(`/api/user/details`, {
             withCredentials: true,
         })
-            .then(response => {
+            .then(() => {
                 setIsUserTokenVerified(true);
             })
             .catch(error => {

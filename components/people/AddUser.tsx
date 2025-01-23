@@ -3,9 +3,10 @@ type UserProps = {
   details: string;
   imageUrl: string;
   onAddFriend: () => void;
+  isRequestSent: boolean;
 };
 
-export default function AddUser({ name, details, imageUrl, onAddFriend }: UserProps) {
+export default function AddUser({ name, details, imageUrl, onAddFriend, isRequestSent }: UserProps) {
   return (
     <div className="bg-white shadow-md p-4 rounded-lg w-full max-w-sm my-1">
       <div className="flex items-center gap-4">
@@ -21,9 +22,12 @@ export default function AddUser({ name, details, imageUrl, onAddFriend }: UserPr
         </div>
       </div>
       <div className="flex">
-        <button onClick={onAddFriend} className="bg-blue-600 text-white px-4 py-2 ms-auto rounded-md hover:bg-blue-700">
+        {isRequestSent && <div className="bg-orange-600 text-white px-4 py-2 ms-auto rounded-md">
+          Pending
+        </div>}
+        {!isRequestSent && <button onClick={onAddFriend} className="bg-blue-600 text-white px-4 py-2 ms-auto rounded-md hover:bg-blue-700">
           Add Friend
-        </button>
+        </button>}
       </div>
     </div>
 

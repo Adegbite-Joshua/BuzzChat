@@ -10,6 +10,8 @@ interface iUserDetailsContext {
     allUsers: User[];
     friendRequests: User[];
     fetchUserFriendsRequest: ()=>void;
+    sentFriendRequests: string[];
+    fetchUserSentFriendRequests: ()=>void;
 }
 
 export const UserDetailsContext = createContext<iUserDetailsContext | null>(null);
@@ -18,6 +20,7 @@ export const UserDetailsContextProvider = ({ children }: { children: React.React
     const [userDetails, setUserDetails] = useState<User>({});
     const [userFriends, setUserFriends] = useState<User[]>([]);
     const [friendRequests, setFriendRequests] = useState<User[]>([]);
+    const [sentFriendRequests, setSentFriendRequests] = useState<string[]>([]);
     const [allUsers, setAllUsers] = useState<User[]>([]);
 
 
@@ -39,7 +42,18 @@ export const UserDetailsContextProvider = ({ children }: { children: React.React
         })
         .catch(err => {
             console.error(err);
-            toast.error('Error fetching all users')
+            toast.error('Error fetching friend requests')
+        });
+    }, []);
+
+    const fetchUserSentFriendRequests = useCallback(() => {
+        axios.get('/api/user/sent-requests')
+        .then(response => {
+            setSentFriendRequests(response.data.friendRequests);
+        })
+        .catch(err => {
+            console.error(err);
+            toast.error('Error fetching sent friend requests')
         });
     }, []);
 
@@ -49,7 +63,9 @@ export const UserDetailsContextProvider = ({ children }: { children: React.React
         fetchAllUsers,
         allUsers,
         friendRequests,
-        fetchUserFriendsRequest
+        fetchUserFriendsRequest,
+        sentFriendRequests,
+        fetchUserSentFriendRequests,
     }}>
         {children}
     </UserDetailsContext.Provider>

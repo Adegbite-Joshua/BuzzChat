@@ -12,7 +12,6 @@ import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation';
 import useGetUserDetails from '@/hooks/useGetUserDetails'
-import { useSocket } from '@/contexts/SocketContext'
 
 export const ActionButtons = ({ type, isMessagesSelected }: { type?: string, isMessagesSelected?: boolean }) => {
     if (isMessagesSelected && type == 'messages') {
@@ -77,8 +76,6 @@ export default function Layout() {
 
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-    const { userDetails } = useGetUserDetails();
-
     const handleAttachmentClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -94,9 +91,9 @@ export default function Layout() {
     useEffect(() => {
         console.log("Selected Messages:", selectedMessages);
         setIsMessagesSelected(selectedMessages.length > 0);
-      }, [selectedMessages]);
+    }, [selectedMessages]);
 
-    const handleSetSelectedMessages = (messageId: string) => {                
+    const handleSetSelectedMessages = (messageId: string) => {
         setSelectedMessages((prev) => {
             if (prev.includes(messageId)) {
                 return prev.filter((id) => id !== messageId);
@@ -108,8 +105,8 @@ export default function Layout() {
     };
 
     useEffect(() => {
-      selectedMessages.length > 0 ? setIsMessagesSelected(true) : setIsMessagesSelected(false);
-    }, [selectedMessages]);    
+        selectedMessages.length > 0 ? setIsMessagesSelected(true) : setIsMessagesSelected(false);
+    }, [selectedMessages]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -149,16 +146,22 @@ export default function Layout() {
         setIsSearchVisible((prev) => !prev);
     };
 
-    const handleSearch = (event: any) => {
-        const searchText = event.target.value.toLowerCase();
+    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const target = event.target;
+
+        if (!target) return;
+
+        const searchText = target.value.toLowerCase();
         const filtered = ['hhhh', 'jjj'].filter((msg) =>
             msg.toLowerCase().includes(searchText)
         );
+
         setFilteredMessages(filtered);
     };
 
+
     console.log(filteredMessages);
-    
+
 
     useEffect(() => {
         if (isSearchVisible && searchInputRef.current) {
@@ -290,7 +293,7 @@ export default function Layout() {
                                     <SenderMessage key={id} messageId={id} selectedMessages={selectedMessages} handleSetSelectedMessages={handleSetSelectedMessages} isMessagesSelected={isMessagesSelected} />
                                 ))}
                                 <ReceiverMessage />
-                                
+
                                 <span ref={lastMessageRef} className="h-0"></span>
                             </div>
                         </div>
