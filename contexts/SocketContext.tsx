@@ -4,7 +4,6 @@ import { Socket, io } from "socket.io-client";
 import { useUserDetails } from "./UserDetailsContext";
 
 interface iSocketContext {
-    connectToSocket: (user: any) => void;
     onlineUsers: OnlineUser[];
 }
 
@@ -14,7 +13,9 @@ export const SocketContextProvider = ({ children }: { children: React.ReactNode 
     const [socket, setSocket] = useState<Socket | null>(null);
     const [isSocketConnected, setIsSocketConnected] = useState(false);
 
-    const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);    
+    const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
+
+    const { userDetails } = useUserDetails();
 
     useEffect(() => {
         const newSocket = io();
@@ -50,17 +51,48 @@ export const SocketContextProvider = ({ children }: { children: React.ReactNode 
         }
     }, [socket])
 
-    const connectToSocket = useCallback((user: any) => {
+    useEffect(() => {
         if (!socket || !isSocketConnected) return;
-        socket.emit('addNewUser', user);
-        socket.on('getAlreadyOnlineUsers', (users: OnlineUser[])=>{
-            setOnlineUsers(users);
-        })
-    }, [socket, isSocketConnected]);
 
+        // Emit the addNewUser event to notify the server of the user
+        socket.emit('addNewUser', userDetails);
+
+        // Handlers for socket events
+        const handleGetOnlineUsers = (users: OnlineUser[]) => {
+            setOnlineUsers(users); // Replace the state with the full list of online users
+        };
+
+        const handleNewUserJoin = (user: OnlineUser) => {
+            console.log('adding new user');
+            
+            setOnlineUsers(prev => {
+                if (Array.isArray(prev) && !prev.some(u => u.userId === user.userId)) {
+                    return [user, ...prev];
+                }
+                return prev;
+            });
+        };
+
+        const handleUserDisconnect = (user: OnlineUser) => {
+            console.log('removing user');
+            
+            setOnlineUsers(prev => prev.filter(u => u.userId !== user.userId));
+        };
+
+        // Register socket listeners
+        socket.on('getAlreadyOnlineUsers', handleGetOnlineUsers);
+        socket.on('newUserJoin', handleNewUserJoin);
+        socket.on('userDisconnect', handleUserDisconnect);
+
+        // Cleanup event listeners
+        return () => {
+            socket.off('getAlreadyOnlineUsers', handleGetOnlineUsers);
+            socket.off('newUserJoin', handleNewUserJoin);
+            socket.off('userDisconnect', handleUserDisconnect);
+        };
+    }, [socket, isSocketConnected, userDetails]);
 
     return <SocketContext.Provider value={{
-        connectToSocket,
         onlineUsers
     }}>
         {children}
@@ -70,7 +102,7 @@ export const SocketContextProvider = ({ children }: { children: React.ReactNode 
 export const useSocket = () => {
     const context = useContext(SocketContext);
 
-    if (!context) {
+    if (context === null) {
         throw new Error(`useSocket must be used within SocketContextProvider`);
     }
 

@@ -17,32 +17,48 @@ app.prepare().then(() => {
   let onlineUsers = [];
 
   io.on("connection", (socket) => {
-    console.log("connection established", socket.id);
+    console.log("Connection established", socket.id);
 
-    socket.on('addNewUser', (newUser)=>{
-      console.log("new user added", newUser);
-      user && !onlineUsers.some(user => user?.userId === newUser._id) && onlineUsers.push({
-        userId: newUser._id,
-        socketId: socket.id,
-        profile: newUser
-      });
+    socket.on('addNewUser', (newUser) => {
+      console.log("New user added", newUser);
 
-      io.emit('getAlreadyOnlineUsers', onlineUsers);
-    })
+      if (Object.keys(newUser).length > 0 && !onlineUsers.some(user => user.userId === newUser._id)) {
+        onlineUsers.push({
+          userId: newUser._id,
+          socketId: socket.id,
+          profile: newUser
+        });
+
+        // Send the updated list of online users to the newly connected client
+        socket.emit('getAlreadyOnlineUsers', onlineUsers);
+
+        // Notify all other clients about the new user
+        socket.broadcast.emit('newUserJoin', {
+          userId: newUser._id,
+          socketId: socket.id,
+          profile: newUser
+        });
+      }
+    });
 
     socket.on('disconnect', () => {
-      onlineUsers.filter(user => user.userId !== socket.id);
+      console.log("User disconnected", socket.id);
 
-      io.emit('getOnlineUsers', onlineUsers);
-    })
+      // Remove the disconnected user from the online users list
+      onlineUsers = onlineUsers.filter(user => user.socketId !== socket.id);
+
+      // Notify all other clients about the disconnection
+      socket.broadcast.emit('userDisconnect', { socketId: socket.id });
+    });
   });
+
 
   httpServer
     .once("error", (err) => {
       console.error(err);
       process.exit(1);
     })
-    .listen(port, async() => {
+    .listen(port, async () => {
       console.log(`> Ready on http://${hostname}:${port}`);
     });
 });

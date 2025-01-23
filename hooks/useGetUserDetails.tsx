@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useUserDetails } from '@/contexts/UserDetailsContext';
+import { useRouter } from 'next/navigation';
 // import { useSocket } from '@/contexts/SocketContext';
 
 const useGetUserDetails = () => {
@@ -19,7 +19,7 @@ const useGetUserDetails = () => {
 
         axios.get(`/api/user/details`, { withCredentials: true })
             .then(response => {
-                setUserDetails(response.data);
+                setUserDetails(response.data.user);
                 // connectToSocket(response.data);
                 setIsLoading(true);
                 isFetching.current = false;

@@ -109,14 +109,7 @@ export default function Layout() {
 
     useEffect(() => {
       selectedMessages.length > 0 ? setIsMessagesSelected(true) : setIsMessagesSelected(false);
-    }, [selectedMessages]);
-    const { connectToSocket } = useSocket();
-    
-    useEffect(() => {
-      connectToSocket(userDetails);
-    }, [userDetails])
-    
-    
+    }, [selectedMessages]);    
 
     useEffect(() => {
         const handleResize = () => {

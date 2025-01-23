@@ -15,6 +15,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import Friend from '@/components/people/Friend'
 import AddUser from '@/components/people/AddUser'
 import Avatar from "@mui/material/Avatar";
+import { useUserDetails } from '@/contexts/UserDetailsContext'
 
 
 
@@ -57,12 +58,12 @@ export default function Layout() {
         },
     ]);
 
-    const handleAccept = (id: number) => {
+    const handleAccept = (id: number | string) => {
         setRequests((prev) => prev.filter((request) => request.id !== id));
         alert(`Friend request from ID ${id} accepted!`);
     };
 
-    const handleDelete = (id: number) => {
+    const handleDelete = (id: number | string) => {
         setRequests((prev) => prev.filter((request) => request.id !== id));
         alert(`Friend request from ID ${id} deleted!`);
     };
@@ -71,9 +72,15 @@ export default function Layout() {
 
     const handleChange = (event: React.SyntheticEvent, newtabValue: string) => {
         settabValue(newtabValue);
-        console.log(event);
-        
     };
+
+    const { allUsers, fetchAllUsers, friendRequests, fetchUserFriendsRequest } = useUserDetails();
+
+    useEffect(() => {
+        fetchAllUsers();
+        fetchUserFriendsRequest();
+    }, [])
+
     return (
         <div className='basis-full md:basis-10/12 flex'>
             <div className="basis-full md:basis-2/6 border-r border-slate-200">
@@ -130,16 +137,18 @@ export default function Layout() {
                                     </IconButton>
 
                                     <div>
-                                        {requests.map((request) => (
-                                            <FriendRequest
-                                                key={request.id}
-                                                name={request.name}
-                                                details={request.details}
-                                                imageUrl={request.imageUrl}
-                                                onAccept={() => handleAccept(request.id)}
-                                                onDelete={() => handleDelete(request.id)}
-                                            />
-                                        ))}
+                                        {friendRequests.length == 0 ?
+                                            <div>No friend request yet</div> :
+                                            friendRequests.map((request) => (
+                                                <FriendRequest
+                                                    key={request._id}
+                                                    name={`${request.firstName} ${request.lastName}`}
+                                                    details={request.bio as string}
+                                                    imageUrl={''}
+                                                    onAccept={() => handleAccept(request._id as string)}
+                                                    onDelete={() => handleDelete(request._id as string)}
+                                                />
+                                            ))}
                                     </div>
                                 </TabPanel>
                                 <TabPanel value="find">
@@ -149,15 +158,17 @@ export default function Layout() {
                                     </IconButton>
 
                                     <div>
-                                        {requests.map((request) => (
-                                            <AddUser
-                                                key={request.id}
-                                                name={request.name}
-                                                details={request.details}
-                                                imageUrl={request.imageUrl}
-                                                onAddFriend={() => handleAccept(request.id)}
-                                            />
-                                        ))}
+                                        {allUsers.length == 0 ?
+                                            <div>No friends yet</div> :
+                                            allUsers.map((request) => (
+                                                <AddUser
+                                                    key={request._id}
+                                                    name={`${request.firstName} ${request.lastName}`}
+                                                    details={request.bio as string}
+                                                    imageUrl={''}
+                                                    onAddFriend={() => handleAccept(request._id as string)}
+                                                />
+                                            ))}
                                     </div>
                                 </TabPanel>
                             </TabContext>
@@ -211,11 +222,11 @@ export default function Layout() {
                     </div>
                     <div className='flex gap-5 my-2 font-semibold'>
                         <button className='p-2 bg-slate-300 text-blue-600 flex gap-2 items-center rounded-md'>
-                            <PersonRemoveOutlined/>
+                            <PersonRemoveOutlined />
                             Unfriend
                         </button>
                         <button className='p-2 bg-blue-600 text-white flex gap-2 items-center rounded-md'>
-                            <ChatOutlined/>
+                            <ChatOutlined />
                             Message
                         </button>
                     </div>

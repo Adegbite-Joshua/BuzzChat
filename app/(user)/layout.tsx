@@ -1,6 +1,5 @@
 "use client"
 
-
 import AuthenticatedNavbar from '@/components/navbar/AuthenticatedNavbar'
 import React, { useEffect, useState } from 'react'
 import OnVideoCall from "@/components/calls/OnVideoCall";

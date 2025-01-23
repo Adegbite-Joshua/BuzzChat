@@ -1,9 +1,9 @@
-import { SocketContextProvider } from "@/contexts/SocketContext";
+import { UserDetailsContextProvider } from "@/contexts/UserDetailsContext";
 
 const UserDetailsProvider = ({children}: {children: React.ReactNode}) => {
-    return ( <SocketContextProvider>
+    return ( <UserDetailsContextProvider>
         {children}
-    </SocketContextProvider> );
+    </UserDetailsContextProvider> );
 }
  
 export default UserDetailsProvider;
