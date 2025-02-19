@@ -1,7 +1,9 @@
+import Link from 'next/link';
 import React, { } from 'react';
 
 type FriendRequestProps = {
     name: string;
+    id: string;
     details: string;
     imageUrl: string;
     onAccept: () => void;
@@ -10,6 +12,7 @@ type FriendRequestProps = {
 
 export default function FriendRequest({
     name,
+    id,
     details,
     imageUrl,
     onAccept,
@@ -18,11 +21,14 @@ export default function FriendRequest({
     return (
         <div className='bg-white p-4 shadow-md w-full max-w-sm my-1'>
             <div className="flex items-center gap-4 rounded-lg ">
-                <img
-                    src={imageUrl}
-                    alt={name}
-                    className="w-12 h-12 rounded-full object-cover"
-                />
+
+                <Link className="w-12 h-12" href={`/people/${id}`}>
+                    <img
+                        src={imageUrl}
+                        alt={name}
+                        className="w-12 h-12 rounded-full object-cover"
+                    />
+                </Link>
 
                 <div className="flex flex-col flex-grow">
                     <h3 className="text-lg font-semibold text-gray-800">{name}</h3>

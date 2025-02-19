@@ -9,6 +9,8 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import SocketProvider from '@/providers/SocketProvider';
 import UserDetailsProvider from '@/providers/UserDetailsProvider';
+import { useUserDetails } from '@/contexts/UserDetailsContext';
+import { User } from '@/types';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
     const [showVideoCall, setShowVideoCall] = useState(false);

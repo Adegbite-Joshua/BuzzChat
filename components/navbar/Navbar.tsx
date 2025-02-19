@@ -113,11 +113,11 @@ export default function Navbar(props: Props) {
         <Image src={'/logo-t.png'} alt='Logo' height={100} width={100} />
       }>BUZZCHAT</Button>
       <div className='hidden md:flex w-2/3 justify-evenly'>
-        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/'}>Home</Link>
-        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/about'}>About</Link>
-        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/features'}>Features</Link>
-        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/login'}>Log in</Link>
-        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-full ' href={'/signup'}>Create Account</Link>
+        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-md ' href={'/'}>Home</Link>
+        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-md ' href={'/about'}>About</Link>
+        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-md ' href={'/features'}>Features</Link>
+        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-md ' href={'/login'}>Log in</Link>
+        <Link className='text-white font-semibold px-3 py-2 hover:bg-slate-100 hover:text-blue-600 duration-300 ease-in-out rounded-md ' href={'/signup'}>Create Account</Link>
       </div>
       <IconButton className='text-white md:hidden' onClick={handleDrawerToggle}>
         <MenuIcon fontSize='large' />

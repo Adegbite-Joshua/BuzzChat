@@ -2,15 +2,18 @@ import Link from "next/link";
 
 type UserProps = {
   name: string;
+  id: string;
   details: string;
   imageUrl: string;
   friends: [];
+  selectUser?: () => void;
+
 };
 
-export default function Friend({ name, details, imageUrl, friends }: UserProps) {
+export default function Friend({ name, id, details, imageUrl, friends }: UserProps) {
   return (
     <div className="flex items-center my-1 gap-4 bg-white shadow-md p-4 rounded-lg w-full max-w-sm cursor-pointer">
-      <Link className="w-12 h-12" href={`/people/${'people'}`}>
+      <Link className="w-12 h-12" href={`/people/${id}`}>
         <img
           src={imageUrl}
           alt={name}

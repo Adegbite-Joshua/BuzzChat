@@ -6,7 +6,7 @@ import { Box, Button, IconButton } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import FriendRequest from '@/components/people/FriendRequest'
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
@@ -18,6 +18,7 @@ import Avatar from "@mui/material/Avatar";
 import { useUserDetails } from '@/contexts/UserDetailsContext'
 import { toast } from 'react-toastify'
 import axios from 'axios'
+import { User } from '@/types'
 
 
 
@@ -25,6 +26,8 @@ export default function Layout() {
     const [showCalls, setShowCalls] = useState(false);
     const [isMediumSize, setIsMediumSize] = useState(false);
     const params = useParams();
+    const router = useRouter();
+    const [selectedUserId, setselectedUserId] = useState<string | null>(null);
 
 
     useEffect(() => {
@@ -34,6 +37,9 @@ export default function Layout() {
         };
 
         const { id } = params;
+        console.log(id);
+
+        setselectedUserId(id as string);
         setShowCalls(id ? true : false);
 
         handleResize();
@@ -45,28 +51,15 @@ export default function Layout() {
         };
     }, [params]);
 
-    const [requests, setRequests] = useState([
-        {
-            id: 1,
-            name: 'John Doe',
-            details: 'Software Engineer at ABC Corp',
-            imageUrl: 'https://via.placeholder.com/50',
-        },
-        {
-            id: 2,
-            name: 'Alice Smith',
-            details: 'Product Designer at XYZ Inc.',
-            imageUrl: 'https://via.placeholder.com/50',
-        },
-    ]);
+    const [requests, setRequests] = useState<User[]>([]);
 
     const handleAccept = (id: number | string) => {
-        setRequests((prev) => prev.filter((request) => request.id !== id));
+        setRequests((prev) => prev.filter((request) => request._id !== id));
         alert(`Friend request from ID ${id} accepted!`);
     };
 
     const handleDelete = (id: number | string) => {
-        setRequests((prev) => prev.filter((request) => request.id !== id));
+        setRequests((prev) => prev.filter((request) => request._id !== id));
         alert(`Friend request from ID ${id} deleted!`);
     };
 
@@ -76,14 +69,13 @@ export default function Layout() {
         settabValue(newtabValue);
     };
 
-    const { allUsers, fetchAllUsers, friendRequests, fetchUserFriendsRequest, sentFriendRequests, fetchUserSentFriendRequests } = useUserDetails();
+    const { setUserDetails, userDetails, allUsers, fetchAllUsers, friendRequests, fetchUserFriendsRequest, sentFriendRequests, fetchUserSentFriendRequests } = useUserDetails();
 
     useEffect(() => {
         fetchAllUsers();
         fetchUserFriendsRequest();
         fetchUserSentFriendRequests();
     }, [])
-
 
     const [isSending, setIsSending] = useState(false);
 
@@ -127,6 +119,22 @@ export default function Layout() {
             setIsSending(false);
         }
     };
+
+    useEffect(() => {
+        axios.get(`/api/user/details`, {
+            withCredentials: true,
+        })
+            .then((response) => {
+                setUserDetails(response.data.user as User);
+            })
+            .catch(error => {
+                toast.error('Invalid token')
+                router.push('/login');
+                console.error(error);
+            });
+    }, []);
+
+    const [selectedUser, setSelectedUser] = useState<User | null>(null)
     return (
         <div className='basis-full md:basis-10/12 flex'>
             <div className="basis-full md:basis-2/6 border-r border-slate-200">
@@ -167,10 +175,11 @@ export default function Layout() {
                                     <div>
                                         {requests.map((request) => (
                                             <Friend
-                                                key={request.id}
-                                                name={request.name}
-                                                details={request.details}
-                                                imageUrl={request.imageUrl}
+                                                id={request._id as string}
+                                                key={request._id}
+                                                name={`${request.firstName} ${request.lastName}`}
+                                                details={request.bio as string}
+                                                imageUrl={''}
                                                 friends={[]}
                                             />
                                         ))}
@@ -188,6 +197,7 @@ export default function Layout() {
                                             friendRequests.map((request) => (
                                                 <FriendRequest
                                                     key={request._id}
+                                                    id={request._id as string}
                                                     name={`${request.firstName} ${request.lastName}`}
                                                     details={request.bio as string}
                                                     imageUrl={''}
@@ -206,14 +216,18 @@ export default function Layout() {
                                     <div>
                                         {allUsers.length == 0 ?
                                             <div>No friends yet</div> :
-                                            allUsers.map((request) => (
+                                            allUsers.map((user) => (
                                                 <AddUser
-                                                    key={request._id}
-                                                    name={`${request.firstName} ${request.lastName}`}
-                                                    details={request.bio as string}
+                                                    key={user._id}
+                                                    name={`${user.firstName} ${user.lastName}`}
+                                                    details={user.bio as string}
                                                     imageUrl={''}
-                                                    isRequestSent={sentFriendRequests.includes(request._id as string)}
-                                                    onAddFriend={() => handleSendRequest(request._id as string)}
+                                                    id={user._id as string}
+                                                    userHasSentFriendRequest={friendRequests.some(request => request._id === user._id)}
+                                                    isRequestSent={sentFriendRequests.includes(user._id as string)}
+                                                    onAddFriend={() => handleSendRequest(user._id as string)}
+                                                    onAccept={() => handleAccept(user._id as string)}
+                                                    onDelete={() => handleDelete(user._id as string)}
                                                 />
                                             ))}
                                     </div>
@@ -226,61 +240,73 @@ export default function Layout() {
                 <BottomNavbar isMediumSize={isMediumSize} />
             </div>
             <div className={`${showCalls && isMediumSize ? 'block absolute top-0 left-0 z-10 w-full h-full' : 'hidden'} md:block md:basis-4/6 bg-slate-200`}>
-                <div className='h-1/6 p-3 bg-white flex items-center justify-between'>
-                    <div className='flex gap-3'>
-                        <Link href={'/messages'} className='flex justify-center items-center'>
-                            <img src={`/logo.png`} alt={`Another friend`} className='h-12 w-12 aspect-square rounded-full' />
-                        </Link>
-                        <div className=''>
-                            <p className="font-bold">Chinedu Oyenre</p>
-                            <p className="text-green-400 text-sm">Short bio ...</p>
+                {selectedUserId && <>
+                    <div className='h-1/6 p-3 bg-white flex items-center justify-between'>
+                        <div className='flex gap-3'>
+                            <Link href={'/messages'} className='flex justify-center items-center'>
+                                <img src={`/logo.png`} alt={`Another friend`} className='h-12 w-12 aspect-square rounded-full' />
+                            </Link>
+                            <div className=''>
+                                <p className="font-bold">Chinedu Oyenre</p>
+                                <p className="text-green-400 text-sm">Short bio ...</p>
+                            </div>
+                        </div>
+                        <div className="flex text-slate-400 gap-3 items-center">
+                            <IconButton>
+                                <EmailOutlined fontSize='large' />
+                            </IconButton>
+                            <IconButton>
+                                <VideocamOutlined fontSize='large' />
+                            </IconButton>
+                            <IconButton>
+                                <CallOutlined fontSize='large' />
+                            </IconButton>
+                            <IconButton>
+                                <DeleteOutline className='text-red-500' fontSize='large' />
+                            </IconButton>
                         </div>
                     </div>
-                    <div className="flex text-slate-400 gap-3 items-center">
-                        <IconButton>
-                            <EmailOutlined fontSize='large' />
-                        </IconButton>
-                        <IconButton>
-                            <VideocamOutlined fontSize='large' />
-                        </IconButton>
-                        <IconButton>
-                            <CallOutlined fontSize='large' />
-                        </IconButton>
-                        <IconButton>
-                            <DeleteOutline className='text-red-500' fontSize='large' />
-                        </IconButton>
+                    <hr />
+                    <div className="h-5/6 p-3 relative flex flex-col items-center bg-gray-100">
+                        <div className="flex flex-col justify-center items-center mt-6">
+                            <Avatar
+                                src="https://via.placeholder.com/150"
+                                alt="Profile"
+                                className="w-28 h-28"
+                            />
+                            <div>
+                                <p className="text-2xl">Adegbite Joshua</p>
+                                <div className='flex gap-5'>
+                                    <p><span className='font-semibold'>20</span> friends</p>
+                                    <p><span className='font-semibold'>20</span> friends</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='flex gap-5 my-2 font-semibold'>
+                            <button className='p-2 bg-slate-300 text-blue-600 flex gap-2 items-center rounded-md'>
+                                <PersonRemoveOutlined />
+                                Unfriend
+                            </button>
+                            <button className='p-2 bg-blue-600 text-white flex gap-2 items-center rounded-md'>
+                                <ChatOutlined />
+                                Message
+                            </button>
+                        </div>
+                        <div>
+                            <p>From <span className='font-semibold'>Ogbomoso, Nigeria</span></p>
+                        </div>
                     </div>
-                </div>
-                <hr />
-                <div className="h-5/6 p-3 relative flex flex-col items-center bg-gray-100">
-                    <div className="flex flex-col justify-center items-center mt-6">
+                </>}
+                {!selectedUserId && <>
+                    <div className='flex flex-col justify-center items-center h-full w-full'>
                         <Avatar
                             src="https://via.placeholder.com/150"
                             alt="Profile"
-                            className="w-28 h-28"
+                            className="w-56 h-5w-56"
                         />
-                        <div>
-                            <p className="text-2xl">Adegbite Joshua</p>
-                            <div className='flex gap-5'>
-                                <p><span className='font-semibold'>20</span> friends</p>
-                                <p><span className='font-semibold'>20</span> friends</p>
-                            </div>
-                        </div>
+                        <h1 className='text-3xl'>No User Selected</h1>
                     </div>
-                    <div className='flex gap-5 my-2 font-semibold'>
-                        <button className='p-2 bg-slate-300 text-blue-600 flex gap-2 items-center rounded-md'>
-                            <PersonRemoveOutlined />
-                            Unfriend
-                        </button>
-                        <button className='p-2 bg-blue-600 text-white flex gap-2 items-center rounded-md'>
-                            <ChatOutlined />
-                            Message
-                        </button>
-                    </div>
-                    <div>
-                        <p>From <span className='font-semibold'>Ogbomoso, Nigeria</span></p>
-                    </div>
-                </div>
+                </>}
             </div>
         </div>
     )
