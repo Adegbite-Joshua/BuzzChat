@@ -5,13 +5,17 @@ import MessagedUser from '@/components/messages/MessagedUser'
 import ReceiverMessage from '@/components/messages/ReceiverMessage'
 import SenderMessage from '@/components/messages/SenderMessage'
 import BottomNavbar from '@/components/navbar/BottomNavbar'
-import { AttachFileOutlined, CallOutlined, ChatRounded, CloseOutlined, CopyAllOutlined, DeleteOutline, EditOutlined, FmdGoodOutlined, InfoOutlined, MicOutlined, MoreHorizOutlined, ReplyAllOutlined, SearchOutlined, SendOutlined, UndoOutlined, VideocamOutlined } from '@mui/icons-material'
+import { Add, AttachFileOutlined, CallOutlined, ChatRounded, CloseOutlined, CopyAllOutlined, DeleteOutline, EditOutlined, FmdGoodOutlined, InfoOutlined, MicOutlined, MoreHorizOutlined, ReplyAllOutlined, SearchOutlined, SendOutlined, UndoOutlined, VideocamOutlined } from '@mui/icons-material'
 import { Button, IconButton, TextField, Tooltip, Fade } from '@mui/material'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation';
 import useGetUserDetails from '@/hooks/useGetUserDetails'
+import { useUserDetails } from '@/contexts/UserDetailsContext'
+import MessageFriend from '@/components/messages/MessageFriend'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 export const ActionButtons = ({ type, isMessagesSelected }: { type?: string, isMessagesSelected?: boolean }) => {
     if (isMessagesSelected && type == 'messages') {
@@ -76,6 +80,8 @@ export default function Layout() {
 
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
+    const { userFriends, friendInChatWith, setFriendInChatWith } = useUserDetails();
+
     const handleAttachmentClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -115,9 +121,17 @@ export default function Layout() {
         };
 
         const { id } = params;
-        console.log(params);
 
-        setShowMessages(id ? true : false);
+        if (!friendInChatWith) {
+            axios.get(`/api/user/details/${id}`)
+            .then((response) => {
+                setFriendInChatWith(response.data.user);
+            })
+            .catch((error) => {
+                toast.error('Error fetching user details')
+                console.error(error);
+            });
+        }
 
         handleResize();
 
@@ -139,11 +153,16 @@ export default function Layout() {
     const [viewProfile, setViewProfile] = useState(false);
 
     const [isSearchVisible, setIsSearchVisible] = useState(false);
+    const [isViewingAllFriends, setIsViewingAllFriends] = useState(false);
     const [filteredMessages, setFilteredMessages] = useState<string[]>([]);
     const searchInputRef = useRef(null);
 
     const toggleSearch = () => {
         setIsSearchVisible((prev) => !prev);
+    };
+
+    const toggleViewAllFriends = () => {
+        setIsViewingAllFriends((prev) => !prev);
     };
 
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -159,10 +178,6 @@ export default function Layout() {
         setFilteredMessages(filtered);
     };
 
-
-    console.log(filteredMessages);
-
-
     useEffect(() => {
         if (isSearchVisible && searchInputRef.current) {
             // searchInputRef.current.focus();
@@ -172,22 +187,6 @@ export default function Layout() {
     return (
         <div className='basis-full md:basis-10/12 flex'>
             <div className="basis-full md:basis-2/6 border-r border-slate-200">
-                {/* <div className='h-[10%] md:h-1/6 p-3 flex items-center justify-between'>
-                    <div>
-                        <Button className='md:hidden text-blue-600 font-bold text-sm items-center' startIcon={
-                            <Image src={'/logo-t.png'} alt='Logo' height={40} width={40} />
-                        }>BUZZCHAT</Button>
-                        <p className="text-sm md:text-xl text-blue-600">Messages</p>
-                    </div>
-                    <div>
-                        <IconButton>
-                            <EditOutlined className='text-slate-400 mx-2' />
-                        </IconButton>
-                        <IconButton>
-                            <SearchOutlined className='text-slate-400 mx-2' />
-                        </IconButton>
-                    </div>
-                </div> */}
                 <div className='h-[10%] md:h-1/6 p-3 flex items-center justify-between relative'>
                     <div>
                         <Button
@@ -201,8 +200,8 @@ export default function Layout() {
                         <p className="text-sm md:text-xl text-blue-600">Messages</p>
                     </div>
                     <div className="flex items-center relative">
-                        <IconButton>
-                            <EditOutlined className='text-slate-400 mx-2' />
+                        <IconButton onClick={toggleViewAllFriends}>
+                            <Add className='text-slate-400 mx-2' />
                         </IconButton>
 
                         <IconButton onClick={toggleSearch}>
@@ -227,6 +226,13 @@ export default function Layout() {
                                 />
                             </div>
                         </Fade>
+                        <Fade in={isViewingAllFriends}>
+                            <div className="absolute right-0 top-full mt-2 w-64 bg-gray-200 p-3">
+                                {userFriends.map(friend => (
+                                    <MessageFriend toggleViewAllFriends={toggleViewAllFriends} user={friend} />
+                                ))}
+                            </div>
+                        </Fade>
                     </div>
                 </div>
                 <hr />
@@ -238,7 +244,6 @@ export default function Layout() {
                         </div>
                         <div>
                             <MessagedUser />
-                            <MessagedUser />
                         </div>
                     </div>
                     <div className=''>
@@ -247,20 +252,13 @@ export default function Layout() {
                             <span>All Message</span>
                         </div>
                         <div>
-                            <MessagedUser />
-                            <MessagedUser />
-                            <MessagedUser />
-                            <MessagedUser />
-                            <MessagedUser />
-                            <MessagedUser />
-                            <MessagedUser />
-
+                            <MessagedUser />                           
                         </div>
                     </div>
                 </div>
                 <BottomNavbar isMediumSize={isMediumSize} />
             </div>
-            <div className={`${showMessages && isMediumSize ? 'block absolute top-0 left-0 z-10 w-full h-full' : 'hidden'} md:block md:basis-4/6 bg-slate-200`}>
+            <div className={`${friendInChatWith && isMediumSize ? 'block absolute top-0 left-0 z-10 w-full h-full' : 'hidden'} md:block md:basis-4/6 bg-slate-200`}>
                 <div className='w-full h-full relative'>
                     <div className='h-1/6 p-3 bg-white flex items-center justify-between'>
                         <div className='flex gap-3'>
@@ -268,8 +266,8 @@ export default function Layout() {
                                 <img src={`/logo.png`} alt={`Another friend`} className='h-12 w-12 aspect-square rounded-full' />
                             </Link>
                             <div onClick={() => setViewProfile(!viewProfile)} className='cursor-pointer'>
-                                <p className="font-bold">Chinedu Oyenre</p>
-                                <p className="text-green-400 text-sm">Typing...</p>
+                                <p className="font-bold">{friendInChatWith?.firstName} {friendInChatWith?.lastName}</p>
+                                {/* <p className="text-green-400 text-sm">Typing...</p> */}
                             </div>
                         </div>
                         <ActionButtons type={'messages'} isMessagesSelected={isMessagesSelected} />
@@ -287,13 +285,9 @@ export default function Layout() {
                             {/* Messages */}
                             <div>
                                 <ReceiverMessage />
-                                <ReceiverMessage />
-                                <ReceiverMessage />
-                                {["1", "2", "3"].map((id) => (
+                                {["1"].map((id) => (
                                     <SenderMessage key={id} messageId={id} selectedMessages={selectedMessages} handleSetSelectedMessages={handleSetSelectedMessages} isMessagesSelected={isMessagesSelected} />
                                 ))}
-                                <ReceiverMessage />
-
                                 <span ref={lastMessageRef} className="h-0"></span>
                             </div>
                         </div>

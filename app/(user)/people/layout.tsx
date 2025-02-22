@@ -30,7 +30,7 @@ export default function Layout() {
     const [selectedUserId, setselectedUserId] = useState<string | null>(null);
     const [selectedUserDetails, setSelectedUserDetails] = useState<User | null>(null)
     
-    const { setUserDetails, userDetails, handleAcceptFriendRequest, handleSendFriendRequest, userFriends, allUsers, fetchAllUsers, friendRequests, fetchUserFriendsRequest, sentFriendRequests, fetchUserSentFriendRequests, fetchUserFriends } = useUserDetails();
+    const { setUserDetails, userDetails, handleAcceptFriendRequest, handleSendFriendRequest, userFriends, allUsers, fetchAllUsers, friendRequests, fetchUserFriendsRequest, sentFriendRequests, fetchUserSentFriendRequests } = useUserDetails();
 
 
     useEffect(() => {
@@ -95,8 +95,8 @@ console.log(userFriends);
         fetchAllUsers();
         fetchUserFriendsRequest();
         fetchUserSentFriendRequests();
-        fetchUserFriends();
-    }, [])
+        // fetchUserFriends();
+    }, []);
 
     const [isSending, setIsSending] = useState(false);
 

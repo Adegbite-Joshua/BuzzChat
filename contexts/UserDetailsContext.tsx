@@ -10,12 +10,14 @@ interface iUserDetailsContext {
     allUsers: User[];
     friendRequests: User[];
     userFriends: User[];
+    friendInChatWith: User | null;
     fetchUserFriendsRequest: () => void;
     sentFriendRequests: string[];
     fetchUserSentFriendRequests: () => void;
-    fetchUserFriends: () => void;
+    // fetchUserFriends: () => void;
     handleSendFriendRequest: (friendIdd: string) => void;
     handleAcceptFriendRequest: (details: User) => void;
+    setFriendInChatWith: (details: User) => void;
     handleDeleteFriendRequest: (details: User, type: "sent" | "received") => void;
 }
 
@@ -24,6 +26,7 @@ export const UserDetailsContext = createContext<iUserDetailsContext | null>(null
 export const UserDetailsContextProvider = ({ children }: { children: React.ReactNode }) => {
     const [userDetails, setUserDetails] = useState<User>({});
     const [userFriends, setUserFriends] = useState<User[]>([]);
+    const [friendInChatWith, setFriendInChatWith] = useState<User | null>(null);
     const [friendRequests, setFriendRequests] = useState<User[]>([]);
     const [sentFriendRequests, setSentFriendRequests] = useState<string[]>([]);
     const [allUsers, setAllUsers] = useState<User[]>([]);
@@ -62,9 +65,7 @@ export const UserDetailsContextProvider = ({ children }: { children: React.React
             });
     }, []);
 
-    const fetchUserFriends = useCallback(() => {
-        console.log('requesting');
-        
+    useEffect(() => {        
         axios.get('/api/user/friends')
             .then(response => {
                 setUserFriends(response.data.friends);
@@ -126,14 +127,16 @@ export const UserDetailsContextProvider = ({ children }: { children: React.React
         fetchAllUsers,
         allUsers,
         friendRequests,
+        friendInChatWith,
         fetchUserFriendsRequest,
         sentFriendRequests,
         fetchUserSentFriendRequests,
-        fetchUserFriends,
+        // fetchUserFriends,
         userFriends,
         handleSendFriendRequest,
         handleAcceptFriendRequest,
         handleDeleteFriendRequest,
+        setFriendInChatWith
     }}>
         {children}
     </UserDetailsContext.Provider>

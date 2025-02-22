@@ -14,7 +14,7 @@ export async function GET(req: Request) {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
         }
 
-        const { id, email, error } = decodeJwtToken(token);
+        const { id } = decodeJwtToken(token);
 
         const friends = await FriendsModel.findOne({ _id: id}).populate('friends');
 
