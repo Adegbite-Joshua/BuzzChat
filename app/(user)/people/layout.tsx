@@ -28,6 +28,24 @@ export default function Layout() {
     const params = useParams();
     const router = useRouter();
     const [selectedUserId, setselectedUserId] = useState<string | null>(null);
+    const [selectedUserDetails, setSelectedUserDetails] = useState<User | null>(null)
+    
+    const { setUserDetails, userDetails, handleAcceptFriendRequest, handleSendFriendRequest, userFriends, allUsers, fetchAllUsers, friendRequests, fetchUserFriendsRequest, sentFriendRequests, fetchUserSentFriendRequests, fetchUserFriends } = useUserDetails();
+
+
+    useEffect(() => {
+        if(!selectedUserId) return;
+        axios.get(`/api/user/details/${selectedUserId}`)
+            .then((response) => {
+                setSelectedUserDetails(response.data.user);
+            })
+            .catch((error) => {
+                toast.error('Error fetching user details')
+                console.error(error);
+            });
+    }, [selectedUserId])
+
+console.log(userFriends);
 
 
     useEffect(() => {
@@ -37,7 +55,6 @@ export default function Layout() {
         };
 
         const { id } = params;
-        console.log(id);
 
         setselectedUserId(id as string);
         setShowCalls(id ? true : false);
@@ -51,15 +68,20 @@ export default function Layout() {
         };
     }, [params]);
 
-    const [requests, setRequests] = useState<User[]>([]);
-
-    const handleAccept = (id: number | string) => {
-        setRequests((prev) => prev.filter((request) => request._id !== id));
-        alert(`Friend request from ID ${id} accepted!`);
+    const handleAccept = (user: User) => {
+        axios.post('/api/user/accept-friend-request', {friendId: user._id})
+        .then((response) => {
+            console.log(response.data);
+            toast.success('Request accepted');
+            handleAcceptFriendRequest(user);
+        })
+        .catch((error) => {
+            console.error(error);
+            toast.error('Error sending friend request')
+        });
     };
 
     const handleDelete = (id: number | string) => {
-        setRequests((prev) => prev.filter((request) => request._id !== id));
         alert(`Friend request from ID ${id} deleted!`);
     };
 
@@ -69,12 +91,11 @@ export default function Layout() {
         settabValue(newtabValue);
     };
 
-    const { setUserDetails, userDetails, allUsers, fetchAllUsers, friendRequests, fetchUserFriendsRequest, sentFriendRequests, fetchUserSentFriendRequests } = useUserDetails();
-
     useEffect(() => {
         fetchAllUsers();
         fetchUserFriendsRequest();
         fetchUserSentFriendRequests();
+        fetchUserFriends();
     }, [])
 
     const [isSending, setIsSending] = useState(false);
@@ -113,7 +134,10 @@ export default function Layout() {
         setIsSending(true);
         try {
             await sendFriendRequest(friendId);
+            handleSendFriendRequest(friendId);
         } catch (error) {
+            console.log(error);
+            toast.error('Error sending friend request');
             // Error handling is already handled within the function
         } finally {
             setIsSending(false);
@@ -134,7 +158,6 @@ export default function Layout() {
             });
     }, []);
 
-    const [selectedUser, setSelectedUser] = useState<User | null>(null)
     return (
         <div className='basis-full md:basis-10/12 flex'>
             <div className="basis-full md:basis-2/6 border-r border-slate-200">
@@ -173,7 +196,7 @@ export default function Layout() {
                                     </IconButton>
 
                                     <div>
-                                        {requests.map((request) => (
+                                        {userFriends.map((request) => (
                                             <Friend
                                                 id={request._id as string}
                                                 key={request._id}
@@ -201,7 +224,7 @@ export default function Layout() {
                                                     name={`${request.firstName} ${request.lastName}`}
                                                     details={request.bio as string}
                                                     imageUrl={''}
-                                                    onAccept={() => handleAccept(request._id as string)}
+                                                    onAccept={() => handleAccept(request)}
                                                     onDelete={() => handleDelete(request._id as string)}
                                                 />
                                             ))}
@@ -223,10 +246,11 @@ export default function Layout() {
                                                     details={user.bio as string}
                                                     imageUrl={''}
                                                     id={user._id as string}
+                                                    isFriend={userFriends.some(friend => friend._id === user._id)}
                                                     userHasSentFriendRequest={friendRequests.some(request => request._id === user._id)}
                                                     isRequestSent={sentFriendRequests.includes(user._id as string)}
                                                     onAddFriend={() => handleSendRequest(user._id as string)}
-                                                    onAccept={() => handleAccept(user._id as string)}
+                                                    onAccept={() => handleAccept(user)}
                                                     onDelete={() => handleDelete(user._id as string)}
                                                 />
                                             ))}
@@ -247,8 +271,8 @@ export default function Layout() {
                                 <img src={`/logo.png`} alt={`Another friend`} className='h-12 w-12 aspect-square rounded-full' />
                             </Link>
                             <div className=''>
-                                <p className="font-bold">Chinedu Oyenre</p>
-                                <p className="text-green-400 text-sm">Short bio ...</p>
+                                <p className="font-bold">{selectedUserDetails?.firstName} {selectedUserDetails?.lastName}</p>
+                                <p className="text-green-400 text-sm">{selectedUserDetails?.bio}</p>
                             </div>
                         </div>
                         <div className="flex text-slate-400 gap-3 items-center">
@@ -275,7 +299,7 @@ export default function Layout() {
                                 className="w-28 h-28"
                             />
                             <div>
-                                <p className="text-2xl">Adegbite Joshua</p>
+                                <p className="text-2xl">{selectedUserDetails?.firstName} {selectedUserDetails?.lastName}</p>
                                 <div className='flex gap-5'>
                                     <p><span className='font-semibold'>20</span> friends</p>
                                     <p><span className='font-semibold'>20</span> friends</p>

@@ -7,12 +7,13 @@ type UserProps = {
   imageUrl: string;
   onAddFriend: () => void;
   isRequestSent: boolean;
+  isFriend: boolean;
   userHasSentFriendRequest: boolean;
   onAccept?: () => void;
   onDelete?: () => void;
 };
 
-export default function AddUser({ name, id, details, imageUrl, onAddFriend, isRequestSent, userHasSentFriendRequest, onAccept, onDelete }: UserProps) {
+export default function AddUser({ name, id, details, imageUrl, onAddFriend, isRequestSent, userHasSentFriendRequest, onAccept, onDelete, isFriend }: UserProps) {
   return (
     <div className="bg-white shadow-md p-4 rounded-lg w-full max-w-sm my-1">
       <div className="flex items-center gap-4">
@@ -30,13 +31,13 @@ export default function AddUser({ name, id, details, imageUrl, onAddFriend, isRe
           </div>
       </div>
       <div className="flex">
-        {isRequestSent && !userHasSentFriendRequest && <div className="bg-orange-600 text-white px-4 py-2 ms-auto rounded-md">
+        {!isFriend && isRequestSent && !userHasSentFriendRequest && <div className="bg-orange-600 text-white px-4 py-2 ms-auto rounded-md">
           Pending
         </div>}
-        {!isRequestSent && !userHasSentFriendRequest && <button onClick={onAddFriend} className="bg-blue-600 text-white px-4 py-2 ms-auto rounded-md hover:bg-blue-700">
+        {!isFriend && !isRequestSent && !userHasSentFriendRequest && <button onClick={onAddFriend} className="bg-blue-600 text-white px-4 py-2 ms-auto rounded-md hover:bg-blue-700">
           Add Friend
         </button>}
-        {userHasSentFriendRequest && <div className="flex gap-2 justify-end">
+        {!isFriend && userHasSentFriendRequest && <div className="flex gap-2 justify-end">
           <button
             onClick={onAccept}
             className="bg-green-600 text-sm font-semibold text-white px-2 py-1 rounded-md hover:bg-green-700"
